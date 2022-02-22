@@ -16,20 +16,25 @@ export default {
       videoOptions: {
         autoplay: true,
         controls: false,
-        // fluid: true,
         sources: [
           {
             src:
-                "/videos/sample_video_10_frames.mp4",
+                "/videos/sample_video_1_sec.mp4",
             type: "video/mp4"
           }
         ]
       }
     }
   },
+  methods: {
+    onVideoFinished() {
+      this.$router.push('/polis')
+    }
+  },
   mounted() {
+    const self = this;
     this.player = videojs(this.$refs.videoPlayer, this.videoOptions, function onPlayerReady() {
-      console.log('onPlayerReady', this);
+      this.on('ended', self.onVideoFinished);
     })
   },
   beforeDestroy() {

@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import VideoPlayer from './components/VideoPlayer.vue';
 </script>
 
 <template>
-  <video-player/>
+  <router-view></router-view>
 </template>
 
 <style>
