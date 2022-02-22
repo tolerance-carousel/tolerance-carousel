@@ -19,7 +19,7 @@ export default {
         sources: [
           {
             src:
-                "/videos/sample_video_1_sec.mp4",
+                "/videos/sample_video_10_sec.m4v",
             type: "video/mp4"
           }
         ]
