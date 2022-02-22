@@ -1,31 +1,26 @@
 <template>
-  <video ref="videoPlayer" class="video-js"></video>
+  <div class="h-screen w-screen bg-gray-800">
+    <video ref="videoPlayer" class="video-js w-full h-full"></video>
+  </div>
 </template>
 
 <script>
 import videojs from "video.js";
 
 export default {
-  name: 'HelloWorld',
-  props: {
-    options: {
-      type: Object,
-      default() {
-        return {};
-      }
-    }
-  },
+  name: 'VideoPlayer',
+  props: {},
   data() {
     return {
       player: null,
       videoOptions: {
-        autoplay: false,
-        controls: true,
+        autoplay: true,
+        controls: false,
         // fluid: true,
         sources: [
           {
             src:
-                "https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4",
+                "/videos/sample_video_10_frames.mp4",
             type: "video/mp4"
           }
         ]

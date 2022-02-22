@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
+import VideoPlayer from './components/VideoPlayer.vue';
 </script>
 
 <template>
-  <HelloWorld/>
+  <video-player/>
 </template>
 
 <style>
