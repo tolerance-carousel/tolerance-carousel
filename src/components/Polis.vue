@@ -1,9 +1,11 @@
 <template>
   <div class="grid grid-cols-2 gap-2">
-    <div>
-      <p>POLIS</p>
+    <div class="h-full">
+      <router-link to="/video">Back to video</router-link>
     </div>
-    <div class='polis' data-conversation_id='3bbxvmcwdc'></div>
+    <div class="h-full">
+      <div class='polis' data-conversation_id='3bbxvmcwdc'></div>
+    </div>
   </div>
 </template>
 
