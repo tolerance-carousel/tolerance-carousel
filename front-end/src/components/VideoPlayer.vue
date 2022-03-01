@@ -6,6 +6,8 @@
 
 <script>
 import videojs from "video.js";
+import {VideoState} from "../models/video-state";
+import {mapActions} from "vuex";
 
 export default {
   name: 'VideoPlayer',
@@ -29,13 +31,17 @@ export default {
   methods: {
     onVideoFinished() {
       this.$router.push('/polis')
-    }
+    },
+    ...mapActions([
+      'updateVideoState',
+    ])
   },
   mounted() {
     const self = this;
     this.player = videojs(this.$refs.videoPlayer, this.videoOptions, function onPlayerReady() {
       this.on('ended', self.onVideoFinished);
-    })
+    });
+    this.updateVideoState(VideoState.Playing)
   },
   beforeDestroy() {
     if (this.player) {

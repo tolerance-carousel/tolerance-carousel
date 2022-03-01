@@ -10,6 +10,9 @@
 </template>
 
 <script>
+import {mapActions} from "vuex";
+import {VideoState} from "../models/video-state";
+
 export default {
   name: "Polis",
   mounted() {
@@ -17,6 +20,13 @@ export default {
     let polisEmbedScript = document.createElement('script');
     polisEmbedScript.setAttribute('src', 'https://pol.is/embed.js');
     document.head.appendChild(polisEmbedScript);
+
+    this.updateVideoState(VideoState.EnteringInput);
+  },
+  methods: {
+    ...mapActions([
+      'updateVideoState',
+    ])
   }
 }
 </script>
