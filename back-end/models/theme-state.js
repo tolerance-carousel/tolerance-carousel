@@ -3,6 +3,7 @@ class State {
     static PlayingVideo = new State("playingVideo")
     static EnteringInput = new State("enteringInput")
 
+
     static GetAllNames = function () {
         return [State.Idle.name, State.PlayingVideo.name, State.EnteringInput.name];
     }

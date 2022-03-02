@@ -11,7 +11,7 @@
 
 <script>
 import {mapActions} from "vuex";
-import {VideoState} from "../models/video-state";
+import {VideoState} from "../../models/video-state";
 
 export default {
   name: "Polis",
@@ -21,12 +21,12 @@ export default {
     polisEmbedScript.setAttribute('src', 'https://pol.is/embed.js');
     document.head.appendChild(polisEmbedScript);
 
-    this.updateVideoState(VideoState.EnteringInput);
+    this.updateOnServer(VideoState.EnteringInput);
   },
   methods: {
-    ...mapActions([
-      'updateVideoState',
-    ])
+    ...mapActions({
+      updateOnServer: 'videoStateModule/updateOnServer',
+    })
   }
 }
 </script>

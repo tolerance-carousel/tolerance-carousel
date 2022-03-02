@@ -1,15 +1,15 @@
-import {ActionContext, createStore} from 'vuex';
-import {VideoState} from '../models/video-state';
+import {createStore} from 'vuex';
+import videoStateModule from './modules/video-state';
 
 const store = createStore({
-    modules: {},
+    modules: { videoStateModule },
     state() {
         return {
             'themeId': 'sexuality',
-            'videoState': VideoState.Idle
         };
     },
-    mutations: {},
+    mutations: {
+    },
     getters: {},
     actions: {
         sendHttpRequest: async (context, {url, responseType}) => {
@@ -29,15 +29,6 @@ const store = createStore({
                 xhr.send();
             });
         },
-        updateVideoState: async (context: ActionContext<any, any>, newVideoState: VideoState) => {
-            console.log('Updating video state...', context.rootState.videoState, '->', newVideoState);
-            const themeId = context.rootState.themeId;
-            const updateResponse = await context.dispatch('sendHttpRequest', {
-                url: `http://localhost:4000/update-state?themeId=${themeId}&state=${newVideoState}`,
-                responseType: 'json'
-            });
-            console.log('Server state:', updateResponse);
-        }
     },
 });
 

@@ -13,12 +13,12 @@ export default {
   name: "Home",
   computed: mapState(['themeId']),
   methods: {
-    ...mapActions([
-      'updateVideoState',
-    ])
+    ...mapActions({
+      updateOnServer: 'videoStateModule/updateOnServer',
+    })
   },
   mounted() {
-    this.updateVideoState(VideoState.Idle);
+    this.updateOnServer(VideoState.Idle);
   }
 }
 </script>

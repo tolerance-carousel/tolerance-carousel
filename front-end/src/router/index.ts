@@ -1,7 +1,7 @@
 import {createRouter, createWebHistory, Router} from 'vue-router';
 import VideoPlayer from '../components/VideoPlayer.vue';
 import Home from '../components/Home.vue';
-import Polis from '../components/Polis.vue';
+import Polis from '../components/mobile/Polis.vue';
 
 const routes = [
     {

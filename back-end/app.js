@@ -16,8 +16,27 @@ const states = {
     "migration": State.Idle.name
 }
 
+function isStateValid(state) {
+    return state && State.GetAllNames().includes(state);
+}
+
+function isThemeIdValid(themeId) {
+    return themeId && Object.keys(states).includes(themeId);
+}
+
 app.get('/', (req, res) => {
     res.json(states);
+});
+
+app.get('/get-state', (req, res) => {
+    const themeId = req.query.themeId;
+    if (!isThemeIdValid(themeId)) {
+        console.warn("Invalid theme ID:", themeId);
+        return res.status(400).send({
+            message: 'Invalid theme ID'
+        });
+    }
+    res.json(states[themeId]);
 });
 
 app.get('/get-states', (req, res) => {
@@ -26,19 +45,19 @@ app.get('/get-states', (req, res) => {
 
 app.get('/update-state', (req, res) => {
     const themeId = req.query.themeId;
-    const themeIdIsValid = themeId && Object.keys(states).includes(themeId);
-    if (!themeIdIsValid) {
+    if (!isThemeIdValid(themeId)) {
         console.warn("Invalid theme ID:", themeId);
-        res.json("Invalid theme ID.");
-        return;
+        return res.status(400).send({
+            message: 'Invalid theme ID'
+        });
     }
 
     const state = req.query.state;
-    const stateIsValid = state && State.GetAllNames().includes(state);
-    if (!stateIsValid) {
+    if (!isStateValid(state)) {
         console.warn("Invalid state:", state);
-        res.json("Invalid state.");
-        return;
+        return res.status(400).send({
+            message: 'Invalid state'
+        });
     }
 
     states[themeId] = state;
