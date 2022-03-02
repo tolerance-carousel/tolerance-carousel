@@ -1,20 +1,16 @@
-import {createStore} from 'vuex';
+import {ActionContext, createStore} from 'vuex';
 import {VideoState} from '../models/video-state';
 
 const store = createStore({
     modules: {},
     state() {
         return {
-            'themeId': 'religion',
+            'themeId': 'sexuality',
             'videoState': VideoState.Idle
         };
     },
     mutations: {},
-    getters: {
-        getThemeId: (state: any) => {
-            return state.themeId;
-        },
-    },
+    getters: {},
     actions: {
         sendHttpRequest: async (context, {url, responseType}) => {
             return new Promise(function (resolve, reject) {
@@ -33,10 +29,14 @@ const store = createStore({
                 xhr.send();
             });
         },
-        updateVideoState: (context, newVideoState: VideoState) => {
-            console.log('Updating video state...', context.rootState.videoState, '->', newVideoState)
-            // TODO: Implement
-            return;
+        updateVideoState: async (context: ActionContext<any, any>, newVideoState: VideoState) => {
+            console.log('Updating video state...', context.rootState.videoState, '->', newVideoState);
+            const themeId = context.rootState.themeId;
+            const updateResponse = await context.dispatch('sendHttpRequest', {
+                url: `http://localhost:4000/update-state?themeId=${themeId}&state=${newVideoState}`,
+                responseType: 'json'
+            });
+            console.log('Server state:', updateResponse);
         }
     },
 });

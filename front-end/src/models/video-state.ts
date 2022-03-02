@@ -1,5 +1,5 @@
 export enum VideoState {
-    Idle = 1,
-    Playing,
-    EnteringInput,
+    Idle = "idle",
+    Playing = "playingVideo",
+    EnteringInput = "enteringInput",
 }

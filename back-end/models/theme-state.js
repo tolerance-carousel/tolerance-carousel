@@ -1,10 +1,10 @@
-class ThemeState {
-    static Idle = new ThemeState("idle")
-    static PlayingVideo = new ThemeState("playingVideo")
-    static UserInteracting = new ThemeState("enteringResponses")
+class State {
+    static Idle = new State("idle")
+    static PlayingVideo = new State("playingVideo")
+    static EnteringInput = new State("enteringInput")
 
     static GetAllNames = function () {
-        return [ThemeState.Idle.name, ThemeState.PlayingVideo.name, ThemeState.UserInteracting.name];
+        return [State.Idle.name, State.PlayingVideo.name, State.EnteringInput.name];
     }
 
     constructor(name) {
@@ -12,4 +12,4 @@ class ThemeState {
     }
 }
 
-module.exports = {ThemeState};
+module.exports = {State};

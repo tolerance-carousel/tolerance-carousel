@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
-const {ThemeState} = require("./models/theme-state");
+const {State} = require("./models/theme-state");
 
 const app = express();
 
@@ -10,39 +10,39 @@ app.use(morgan('tiny'));
 app.use(cors());
 app.use(bodyParser.json());
 
-const themeStates = {
-    "religion": ThemeState.Idle.name,
-    "sexuality": ThemeState.Idle.name,
-    "migration": ThemeState.Idle.name
+const states = {
+    "religion": State.Idle.name,
+    "sexuality": State.Idle.name,
+    "migration": State.Idle.name
 }
 
 app.get('/', (req, res) => {
-    res.json(themeStates);
+    res.json(states);
 });
 
-app.get('/get-theme-states', (req, res) => {
-    res.json(themeStates);
+app.get('/get-states', (req, res) => {
+    res.json(states);
 });
 
-app.get('/update-theme-state', (req, res) => {
+app.get('/update-state', (req, res) => {
     const themeId = req.query.themeId;
-    const themeIdIsValid = themeId && Object.keys(themeStates).includes(themeId);
+    const themeIdIsValid = themeId && Object.keys(states).includes(themeId);
     if (!themeIdIsValid) {
         console.warn("Invalid theme ID:", themeId);
         res.json("Invalid theme ID.");
         return;
     }
 
-    const themeState = req.query.themeState;
-    const themeStateIsValid = themeState && ThemeState.GetAllNames().includes(themeState);
-    if (!themeStateIsValid) {
-        console.warn("Invalid theme state:", themeState);
-        res.json("Invalid theme state.");
+    const state = req.query.state;
+    const stateIsValid = state && State.GetAllNames().includes(state);
+    if (!stateIsValid) {
+        console.warn("Invalid state:", state);
+        res.json("Invalid state.");
         return;
     }
 
-    themeStates[themeId] = themeState;
-    res.json(themeStates);
+    states[themeId] = state;
+    res.json(states);
 });
 
 const port = process.env.PORT || 4000;

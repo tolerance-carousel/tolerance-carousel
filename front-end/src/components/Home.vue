@@ -6,11 +6,20 @@
 </template>
 
 <script>
-import {mapState} from "vuex";
+import {mapActions, mapState} from "vuex";
+import {VideoState} from "../models/video-state";
 
 export default {
   name: "Home",
-  computed: mapState(['themeId'])
+  computed: mapState(['themeId']),
+  methods: {
+    ...mapActions([
+      'updateVideoState',
+    ])
+  },
+  mounted() {
+    this.updateVideoState(VideoState.Idle);
+  }
 }
 </script>
 
