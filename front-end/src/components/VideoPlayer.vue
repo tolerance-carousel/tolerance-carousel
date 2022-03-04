@@ -88,6 +88,7 @@ export default {
   mounted() {
     this.updateOnServer(VideoState.Playing);
 
+    // TODO: Wait for response before sending new request.
     setInterval(async () => {
       await this.updateFromServer();
     }, config.POLL_SERVER_EVERY_MS);
