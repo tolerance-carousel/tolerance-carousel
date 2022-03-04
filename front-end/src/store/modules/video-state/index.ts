@@ -10,7 +10,7 @@ const videoStateModule = {
     },
     mutations: {
         updateLocally(state: any, newState: VideoState) {
-            if(state.videoState == newState) {
+            if (state.videoState == newState) {
                 return;
             }
 
@@ -21,21 +21,27 @@ const videoStateModule = {
     actions: {
         updateOnServer: async (context: ActionContext<any, any>, newVideoState: VideoState) => {
             const themeId = context.rootState.themeId;
-            const updateResponse = await context.dispatch('sendHttpRequest', {
+            await context.dispatch('sendHttpRequest', {
                 url: `http://localhost:4000/update-state?themeId=${themeId}&state=${newVideoState}`,
                 responseType: 'json'
-            }, {root: true});
-            // TODO: Handle errors
-            console.log('Server state:', updateResponse);
+            }, {root: true}).then(response => {
+                console.log('Server state:', response);
+            }).catch(error => {
+                console.warn('Could not update state on server...', error);
+                context.commit('updateLocally', VideoState.ServerError);
+            });
         },
         updateFromServer: async (context: ActionContext<any, any>) => {
             // console.log("Retrieving video state from server...");
-            const videoState: string = await context.dispatch('sendHttpRequest', {
+            await context.dispatch('sendHttpRequest', {
                 url: `http://localhost:4000/get-state?themeId=${context.rootState.themeId}`,
                 responseType: 'json'
-            }, {root: true});
-            // TODO: Handle errors
-            context.commit('updateLocally', videoState);
+            }, {root: true}).then(videoState => {
+                context.commit('updateLocally', videoState);
+            }).catch(error => {
+                console.warn('Could not retrieve state from server...', error);
+                context.commit('updateLocally', VideoState.ServerError);
+            });
         }
     },
     getters: {

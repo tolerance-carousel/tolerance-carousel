@@ -1,11 +1,18 @@
 <template>
-  <div class="h-screen w-screen bg-gray-800">
-    <video ref="videoPlayer" class="video-js w-full h-full"></video>
+  <div v-if="videoState === VideoState.ServerError" class="m-2">
+    <p><em>We are experiencing technical difficulties... Our apologies for the inconvenience.</em></p>
   </div>
-  <div v-if="themeId" class="absolute text-white top-0">
-    <p>Theme: {{ themeId }}</p>
-    <p>State: {{ videoState }}</p>
+  <div v-show="videoState === VideoState.Playing || videoState === VideoState.EnteringInput">
+    <div class="h-screen w-screen bg-gray-800">
+      <video ref="videoPlayer" class="video-js w-full h-full"></video>
+    </div>
+
+    <div v-if="themeId" class="absolute text-white top-0">
+      <p>Theme: {{ themeId }}</p>
+      <p>State: {{ videoState }}</p>
+    </div>
   </div>
+
 </template>
 
 <script>
@@ -22,9 +29,18 @@ export default {
     ...mapGetters({videoState: 'videoStateModule/getState'})
   },
   watch: {
-    videoState (newState, prevState) {
+    videoState(newState, prevState) {
       console.log(prevState, '->', newState);
-      if(newState === VideoState.EnteringInput) {
+
+      if (newState === VideoState.Idle) {
+        this.updateOnServer(VideoState.Playing);
+      }
+
+      if (newState === VideoState.Playing) {
+        this.initVideoPlayer();
+      }
+
+      if (newState === VideoState.EnteringInput) {
         this.player.pause();
       } else {
         this.player.play();
@@ -33,11 +49,12 @@ export default {
   },
   data() {
     return {
+      VideoState: VideoState,
       player: null,
       videoOptions: {
         autoplay: true,
         controls: false,
-        loop: true,
+        loop: false,
         sources: [
           {
             src:
@@ -50,17 +67,25 @@ export default {
   },
   methods: {
     onVideoFinished() {
+      this.updateOnServer(VideoState.EnteringInput);
     },
     ...mapActions({
       updateOnServer: 'videoStateModule/updateOnServer',
       updateFromServer: 'videoStateModule/updateFromServer',
-    })
+    }),
+    initVideoPlayer() {
+      if (this.player) {
+        return;
+      }
+
+      const self = this;
+      this.player = videojs(this.$refs.videoPlayer, this.videoOptions, function onPlayerReady() {
+        this.on('ended', self.onVideoFinished);
+      });
+      console.log("Initialized video player...", this.$refs.videoPlayer);
+    }
   },
   mounted() {
-    const self = this;
-    this.player = videojs(this.$refs.videoPlayer, this.videoOptions, function onPlayerReady() {
-      this.on('ended', self.onVideoFinished);
-    });
     this.updateOnServer(VideoState.Playing);
 
     setInterval(async () => {
@@ -72,6 +97,7 @@ export default {
       this.player.dispose()
     }
   }
+
 }
 </script>
 
