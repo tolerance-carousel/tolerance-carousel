@@ -8,7 +8,7 @@
       <video ref="videoPlayer" class="video-js w-full h-full"></video>
     </div>
 
-    <div v-if="themeId" class="absolute text-white top-0">
+    <div v-if="config.DEBUG && themeId" class="absolute text-white top-0">
       <p>Theme: {{ themeId }}</p>
       <p>State: {{ videoState }}</p>
     </div>
@@ -20,7 +20,7 @@
 import videojs from "video.js";
 import {VideoState} from "../models/video-state";
 import {mapActions, mapGetters, mapMutations, mapState} from "vuex";
-import config from '../config.js'
+import Config from '../config.js'
 
 export default {
   name: 'VideoPlayer',
@@ -58,6 +58,7 @@ export default {
   },
   data() {
     return {
+      config: Config,
       VideoState: VideoState,
       player: null,
       videoOptions: {
@@ -103,7 +104,7 @@ export default {
     // TODO: Wait for response before sending new request.
     setInterval(async () => {
       await this.updateFromServer();
-    }, config.POLL_SERVER_EVERY_MS);
+    }, Config.POLL_SERVER_EVERY_MS);
   },
   beforeDestroy() {
     if (this.player) {
