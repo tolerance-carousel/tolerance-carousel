@@ -6,7 +6,7 @@ const videoStateModule = {
     state() {
         return {
             playerState: {
-                videoState: VideoState.Idle,
+                videoState: VideoState.Welcome,
                 videoNum: 0
             }
         };
