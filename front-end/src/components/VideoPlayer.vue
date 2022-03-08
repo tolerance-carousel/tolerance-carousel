@@ -53,6 +53,7 @@ export default {
           this.updateVideoPlayerSource();
 
           if (newState.videoState === VideoState.Playing) {
+            // TODO: Fix issue of video not playing in production made (might be timing-related)
             this.player.play();
           }
 
