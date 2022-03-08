@@ -11,9 +11,9 @@ app.use(cors());
 app.use(bodyParser.json());
 
 const playerStates = {
-    "religion": {videoState: VideoState.Idle.name, videoNum: 0, totalVideoNum: 1},
-    "sexuality": {videoState: VideoState.Idle.name, videoNum: 0, totalVideoNum: 3},
-    "migration": {videoState: VideoState.Idle.name, videoNum: 0, totalVideoNum: 2}
+    "religion": {videoState: VideoState.Welcome.name, videoNum: 0, totalVideoNum: 1},
+    "sexuality": {videoState: VideoState.Welcome.name, videoNum: 0, totalVideoNum: 3},
+    "migration": {videoState: VideoState.Welcome.name, videoNum: 0, totalVideoNum: 2}
 }
 
 function isVideoStateValid(state) {
@@ -73,8 +73,10 @@ app.get('/next-video', (req, res) => {
     playerStates[themeId].videoNum++;
     if(playerStates[themeId].videoNum > playerStates[themeId].totalVideoNum - 1) {
         playerStates[themeId].videoNum = 0;
+        playerStates[themeId].videoState = VideoState.Welcome.name;
+    } else {
+        playerStates[themeId].videoState = VideoState.PlayingVideo.name;
     }
-    playerStates[themeId].videoState = VideoState.PlayingVideo.name;
     res.json(playerStates);
 });
 

@@ -3,15 +3,18 @@
   <div v-if="videoState === VideoState.ServerError" class="m-2">
     <p><em>We are experiencing technical difficulties... Our apologies for the inconvenience.</em></p>
   </div>
+  <div v-if="videoState === VideoState.Welcome" class="m-2">
+    <img :src="`/qr-codes/${this.themeIdStr}.png`" :alt="`${this.themeId} QR Code`" class="mx-auto">
+  </div>
   <div v-show="videoState === VideoState.Playing || videoState === VideoState.EnteringInput">
     <div class="h-screen w-screen bg-gray-800">
       <video ref="videoPlayer" class="video-js w-full h-full"></video>
     </div>
-  </div>
 
-  <div v-if="config.DEBUG && themeId" class="absolute text-white drop-shadow-md top-0">
-    <p>Theme: {{ themeId }}</p>
-    <p>PlayerState: {{ playerState }}</p>
+    <div v-if="isDevMode && themeId" class="absolute text-white drop-shadow-md top-0">
+      <p>Theme: {{ themeId }}</p>
+      <p>PlayerState: {{ playerState }}</p>
+    </div>
   </div>
 
 </template>
@@ -19,8 +22,7 @@
 <script>
 import videojs from "video.js";
 import {VideoState} from "../models/video-state";
-import {mapActions, mapGetters, mapMutations, mapState} from "vuex";
-import Config from '../config.js'
+import {mapActions, mapGetters, mapMutations} from "vuex";
 
 export default {
   name: 'VideoPlayer',
@@ -29,6 +31,7 @@ export default {
     ...mapGetters({
       playerState: 'videoStateModule/getState',
       themeId: 'themeModule/getId',
+      themeIdStr: 'themeModule/getIdStr',
       getVideoPath: 'themeModule/getVideoPath'
     }),
     videoState() {
@@ -38,40 +41,37 @@ export default {
   watch: {
     themeId(newId, prevId) {
       if (newId) {
-        this.updateVideoStateOnServer(VideoState.Playing);
+        // this.updateVideoStateOnServer(VideoState.Welcome);
       }
     },
     playerState: {
       deep: true,
       handler(newState, prevState) {
-        console.log(prevState, '->', newState);
+        if (newState) {
+          console.log(prevState, '->', newState);
 
-        this.updateVideoPlayerSource();
+          this.updateVideoPlayerSource();
 
-        if (newState.videoState === VideoState.Idle) {
-          this.updateVideoStateOnServer(VideoState.Playing);
-        }
+          if (newState.videoState === VideoState.Playing) {
+            this.player.play();
+          }
 
-        if (newState.videoState === VideoState.Playing) {
-        }
-
-        if (newState.videoState === VideoState.EnteringInput) {
-          this.player.pause();
-        } else {
-          this.player.play();
+          if (newState.videoState === VideoState.EnteringInput) {
+            this.player.pause();
+          }
         }
       }
     }
   },
   data() {
     return {
-      config: Config,
       VideoState: VideoState,
       player: null,
+      isDevMode: import.meta.env.DEV,
       videoOptions: {
-        autoplay: true,
+        autoplay: false,
         controls: false,
-        loop: true,
+        loop: false,
         sources: [
           {
             src: null,
@@ -96,11 +96,14 @@ export default {
       }
 
       const currentSource = this.videoOptions.sources[0].src;
-      if(currentSource !== this.getVideoPath) {
+      if (currentSource !== this.getVideoPath) {
         this.videoOptions.sources[0].src = this.getVideoPath;
         this.player.src(this.videoOptions.sources[0]);
         this.player.load();
-        this.player.play();
+
+        if (this.playerState.videoState === VideoState.Playing) {
+          this.player.play();
+        }
       }
     },
     initVideoPlayer() {
@@ -123,7 +126,7 @@ export default {
     // TODO: Wait for response before sending new request.
     setInterval(async () => {
       await this.updateFromServer();
-    }, Config.POLL_SERVER_EVERY_MS);
+    }, import.meta.env.APP_POLL_SERVER_EVERY_MS);
   },
   beforeDestroy() {
     if (this.player) {

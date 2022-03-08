@@ -1,6 +1,5 @@
 import {VideoPlayerState, VideoState} from '../../../models/video-state';
 import {ActionContext} from 'vuex';
-import config from '../../../config';
 
 const videoStateModule = {
     namespaced: true,
@@ -37,7 +36,7 @@ const videoStateModule = {
             }
 
             await context.dispatch('sendHttpRequest', {
-                url: `${config.SERVER_URL}/update-video-state?themeId=${themeId}&state=${newState}`,
+                url: `${import.meta.env.APP_SERVER_URL}/update-video-state?themeId=${themeId}&state=${newState}`,
                 responseType: 'json'
             }, {root: true}).then(response => {
                 console.log('Server state:', response);
@@ -54,7 +53,7 @@ const videoStateModule = {
             }
 
             await context.dispatch('sendHttpRequest', {
-                url: `${config.SERVER_URL}/next-video?themeId=${themeId}`,
+                url: `${import.meta.env.APP_SERVER_URL}/next-video?themeId=${themeId}`,
                 responseType: 'json'
             }, {root: true}).then(response => {
                 console.log('Server state:', response);
@@ -64,16 +63,20 @@ const videoStateModule = {
             });
         },
         updateFromServer: async (context: ActionContext<any, any>) => {
-            // console.log("Retrieving video state from server...");
+            // console.log("Retrieving video state from server...", import.meta.env);
             const themeId: string = context.rootGetters['themeModule/getIdStr'];
             if (!themeId) {
                 return;
             }
             await context.dispatch('sendHttpRequest', {
-                url: `${config.SERVER_URL}/get-state?themeId=${context.rootGetters['themeModule/getIdStr']}`,
+                url: `${import.meta.env.APP_SERVER_URL}/get-state?themeId=${context.rootGetters['themeModule/getIdStr']}`,
                 responseType: 'json'
             }, {root: true}).then(playerState => {
-                context.commit('updateLocally', playerState);
+                if(!playerState) {
+                    context.dispatch('updateVideoStateLocally', VideoState.ServerError);
+                } else {
+                    context.commit('updateLocally', playerState);
+                }
             }).catch(error => {
                 console.warn('Could not retrieve state from server...', error);
                 context.dispatch('updateVideoStateLocally', VideoState.ServerError);
