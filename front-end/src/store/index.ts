@@ -1,16 +1,14 @@
 import {createStore} from 'vuex';
 import videoStateModule from './modules/video-state';
+import themeModule from './modules/theme';
+import {ThemeId} from '../models/theme-id';
 
-const store = createStore({
-    modules: { videoStateModule },
-    state() {
-        return {
-            'themeId': 'sexuality',
-        };
-    },
-    mutations: {
-    },
-    getters: {},
+interface State {
+    themeId: ThemeId | null
+}
+
+const store = createStore<State>({
+    modules: {videoStateModule, themeModule},
     actions: {
         sendHttpRequest: async (context, {url, responseType}) => {
             return new Promise(function (resolve, reject) {

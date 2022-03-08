@@ -1,4 +1,5 @@
 <template>
+  <div v-if="!themeId">Error: Theme ID is incorrect.</div>
   <div v-if="videoState === VideoState.ServerError" class="m-2">
     <p><em>We are experiencing technical difficulties... Our apologies for the inconvenience.</em></p>
   </div>
@@ -18,15 +19,14 @@
 <script>
 import videojs from "video.js";
 import {VideoState} from "../models/video-state";
-import {mapActions, mapGetters, mapState} from "vuex";
+import {mapActions, mapGetters, mapMutations, mapState} from "vuex";
 import config from '../config.js'
 
 export default {
   name: 'VideoPlayer',
   props: {},
   computed: {
-    ...mapState({themeId: 'themeId'}),
-    ...mapGetters({videoState: 'videoStateModule/getState'})
+    ...mapGetters({videoState: 'videoStateModule/getState', themeId: 'themeModule/getId'})
   },
   watch: {
     videoState(newState, prevState) {
@@ -73,6 +73,7 @@ export default {
       updateOnServer: 'videoStateModule/updateOnServer',
       updateFromServer: 'videoStateModule/updateFromServer',
     }),
+    ...mapMutations({selectThemeById: 'themeModule/selectById'}),
     initVideoPlayer() {
       if (this.player) {
         return;
@@ -86,6 +87,7 @@ export default {
     }
   },
   mounted() {
+    this.selectThemeById(this.$route.params.themeId);
     this.updateOnServer(VideoState.Playing);
 
     // TODO: Wait for response before sending new request.

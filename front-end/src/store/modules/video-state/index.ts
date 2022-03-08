@@ -1,6 +1,7 @@
 import {VideoState} from '../../../models/video-state';
 import {ActionContext} from 'vuex';
 import config from '../../../config';
+import {ThemeId} from '../../../models/theme-id';
 
 const videoStateModule = {
     namespaced: true,
@@ -21,7 +22,11 @@ const videoStateModule = {
     },
     actions: {
         updateOnServer: async (context: ActionContext<any, any>, newVideoState: VideoState) => {
-            const themeId = context.rootState.themeId;
+            const themeId: string = context.rootGetters['themeModule/getIdStr'];
+            if (!themeId) {
+                return;
+            }
+
             await context.dispatch('sendHttpRequest', {
                 url: `${config.SERVER_URL}/update-state?themeId=${themeId}&state=${newVideoState}`,
                 responseType: 'json'
@@ -34,8 +39,12 @@ const videoStateModule = {
         },
         updateFromServer: async (context: ActionContext<any, any>) => {
             // console.log("Retrieving video state from server...");
+            const themeId: string = context.rootGetters['themeModule/getIdStr'];
+            if (!themeId) {
+                return;
+            }
             await context.dispatch('sendHttpRequest', {
-                url: `${config.SERVER_URL}/get-state?themeId=${context.rootState.themeId}`,
+                url: `${config.SERVER_URL}/get-state?themeId=${context.rootGetters['themeModule/getIdStr']}`,
                 responseType: 'json'
             }, {root: true}).then(videoState => {
                 context.commit('updateLocally', videoState);
