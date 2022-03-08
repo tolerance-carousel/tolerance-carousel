@@ -1,41 +1,49 @@
-import {VideoState} from '../../../models/video-state';
+import {VideoPlayerState, VideoState} from '../../../models/video-state';
 import {ActionContext} from 'vuex';
 import config from '../../../config';
-import {ThemeId} from '../../../models/theme-id';
 
 const videoStateModule = {
     namespaced: true,
     state() {
         return {
-            'videoState': VideoState.Idle
+            playerState: {
+                videoState: VideoState.Idle,
+                videoNum: 0
+            }
         };
     },
     mutations: {
-        updateLocally(state: any, newState: VideoState) {
-            if (state.videoState == newState) {
+        updateLocally(state: any, newState: VideoPlayerState) {
+            // console.log("Updating local video player state...", newState);
+            if (JSON.stringify(state.playerState) == JSON.stringify(newState)) {
                 return;
             }
 
-            state.videoState = newState;
-            // console.log('Updating video state locally...', state.videoState, '->', newState);
-        }
+            state.playerState = newState;
+            console.log('Updated video player state locally...', state.playerState, '->', newState);
+        },
     },
     actions: {
-        updateOnServer: async (context: ActionContext<any, any>, newVideoState: VideoState) => {
+        updateVideoStateLocally: (context: ActionContext<any, any>, videoState: VideoState) => {
+            const playerState: VideoPlayerState = context.state.playerState;
+            playerState.videoState = videoState;
+            context.commit('updateLocally', playerState);  
+        },
+        updateVideoStateOnServer: async (context: ActionContext<any, any>, newState: VideoState) => {
             const themeId: string = context.rootGetters['themeModule/getIdStr'];
             if (!themeId) {
-                console.log("Did not update server state for theme", themeId);
+                console.log('Did not update server state for theme', themeId);
                 return;
             }
 
             await context.dispatch('sendHttpRequest', {
-                url: `${config.SERVER_URL}/update-state?themeId=${themeId}&state=${newVideoState}`,
+                url: `${config.SERVER_URL}/update-video-state?themeId=${themeId}&state=${newState}`,
                 responseType: 'json'
             }, {root: true}).then(response => {
                 console.log('Server state:', response);
             }).catch(error => {
-                console.warn('Could not update state on server...', error);
-                context.commit('updateLocally', VideoState.ServerError);
+                console.warn('Could not update video state on server...', error);
+                context.dispatch('updateVideoStateLocally', VideoState.ServerError);
             });
         },
         updateFromServer: async (context: ActionContext<any, any>) => {
@@ -47,17 +55,17 @@ const videoStateModule = {
             await context.dispatch('sendHttpRequest', {
                 url: `${config.SERVER_URL}/get-state?themeId=${context.rootGetters['themeModule/getIdStr']}`,
                 responseType: 'json'
-            }, {root: true}).then(videoState => {
-                context.commit('updateLocally', videoState);
+            }, {root: true}).then(playerState => {
+                context.commit('updateLocally', playerState);
             }).catch(error => {
                 console.warn('Could not retrieve state from server...', error);
-                context.commit('updateLocally', VideoState.ServerError);
+                context.dispatch('updateVideoStateLocally', VideoState.ServerError);
             });
         }
     },
     getters: {
-        getState: (state: any, getters: any) => {
-            return state.videoState;
+        getState: (state: any) => {
+            return state.playerState;
         }
     },
 };

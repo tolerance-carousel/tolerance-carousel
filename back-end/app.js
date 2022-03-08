@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
-const {State} = require("./models/theme-state");
+const {VideoState} = require("./models/video-state");
 
 const app = express();
 
@@ -10,22 +10,22 @@ app.use(morgan('tiny'));
 app.use(cors());
 app.use(bodyParser.json());
 
-const states = {
-    "religion": State.Idle.name,
-    "sexuality": State.Idle.name,
-    "migration": State.Idle.name
+const playerStates = {
+    "religion": {videoState: VideoState.Idle.name, videoNum: 0},
+    "sexuality": {videoState: VideoState.Idle.name, videoNum: 0},
+    "migration": {videoState: VideoState.Idle.name, videoNum: 0}
 }
 
-function isStateValid(state) {
-    return state && State.GetAllNames().includes(state);
+function isVideoStateValid(state) {
+    return state && VideoState.GetAllNames().includes(state);
 }
 
 function isThemeIdValid(themeId) {
-    return themeId && Object.keys(states).includes(themeId);
+    return themeId && Object.keys(playerStates).includes(themeId);
 }
 
 app.get('/', (req, res) => {
-    res.json(states);
+    res.json(playerStates);
 });
 
 app.get('/get-state', (req, res) => {
@@ -36,32 +36,30 @@ app.get('/get-state', (req, res) => {
             message: 'Invalid theme ID'
         });
     }
-    res.json(states[themeId]);
+    res.json(playerStates[themeId]);
 });
 
 app.get('/get-states', (req, res) => {
-    res.json(states);
+    res.json(playerStates);
 });
 
-app.get('/update-state', (req, res) => {
+app.get('/update-video-state', (req, res) => {
     const themeId = req.query.themeId;
     if (!isThemeIdValid(themeId)) {
-        console.warn("Invalid theme ID:", themeId);
         return res.status(400).send({
             message: 'Invalid theme ID'
         });
     }
 
     const state = req.query.state;
-    if (!isStateValid(state)) {
-        console.warn("Invalid state:", state);
+    if (!isVideoStateValid(state)) {
         return res.status(400).send({
             message: 'Invalid state'
         });
     }
 
-    states[themeId] = state;
-    res.json(states);
+    playerStates[themeId].videoState = state;
+    res.json(playerStates);
 });
 
 const port = process.env.PORT || 4000;

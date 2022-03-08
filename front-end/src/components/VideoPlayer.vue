@@ -7,11 +7,11 @@
     <div class="h-screen w-screen bg-gray-800">
       <video ref="videoPlayer" class="video-js w-full h-full"></video>
     </div>
+  </div>
 
-    <div v-if="config.DEBUG && themeId" class="absolute text-white top-0">
-      <p>Theme: {{ themeId }}</p>
-      <p>State: {{ videoState }}</p>
-    </div>
+  <div v-if="config.DEBUG && themeId" class="absolute text-white drop-shadow-md top-0">
+    <p>Theme: {{ themeId }}</p>
+    <p>PlayerState: {{ playerState }}</p>
   </div>
 
 </template>
@@ -27,32 +27,38 @@ export default {
   props: {},
   computed: {
     ...mapGetters({
-      videoState: 'videoStateModule/getState',
+      playerState: 'videoStateModule/getState',
       themeId: 'themeModule/getId',
       getVideoPath: 'themeModule/getVideoPath'
-    })
+    }),
+    videoState() {
+      return this.playerState.videoState;
+    }
   },
   watch: {
     themeId(newId, prevId) {
       if (newId) {
-        this.updateOnServer(VideoState.Playing);
+        this.updateVideoStateOnServer(VideoState.Playing);
       }
     },
-    videoState(newState, prevState) {
-      console.log(prevState, '->', newState);
+    playerState: {
+      deep: true,
+      handler(newState, prevState) {
+        console.log(prevState, '->', newState);
 
-      if (newState === VideoState.Idle) {
-        this.updateOnServer(VideoState.Playing);
-      }
+        if (newState.videoState === VideoState.Idle) {
+          this.updateVideoStateOnServer(VideoState.Playing);
+        }
 
-      if (newState === VideoState.Playing) {
-        this.initVideoPlayer();
-      }
+        if (newState.videoState === VideoState.Playing) {
+          this.initVideoPlayer();
+        }
 
-      if (newState === VideoState.EnteringInput) {
-        this.player.pause();
-      } else {
-        this.player.play();
+        if (newState.videoState === VideoState.EnteringInput) {
+          this.player.pause();
+        } else {
+          this.player.play();
+        }
       }
     }
   },
@@ -77,10 +83,10 @@ export default {
   },
   methods: {
     onVideoFinished() {
-      this.updateOnServer(VideoState.EnteringInput);
+      this.updateVideoStateOnServer(VideoState.EnteringInput);
     },
     ...mapActions({
-      updateOnServer: 'videoStateModule/updateOnServer',
+      updateVideoStateOnServer: 'videoStateModule/updateVideoStateOnServer',
       updateFromServer: 'videoStateModule/updateFromServer',
     }),
     ...mapMutations({selectThemeById: 'themeModule/selectById'}),

@@ -22,7 +22,7 @@ export default {
   watch: {
     themeId(newId, prevId) {
       if (newId) {
-        this.updateOnServer(VideoState.EnteringInput);
+        this.updateVideoStateOnServer(VideoState.EnteringInput);
       }
     }
   },
@@ -40,14 +40,14 @@ export default {
   },
   methods: {
     ...mapActions({
-      updateOnServer: 'videoStateModule/updateOnServer',
+      updateVideoStateOnServer: 'videoStateModule/updateVideoStateOnServer',
     }),
     ...mapMutations({selectThemeById: 'themeModule/selectById'}),
     onSetVoting() {
-      this.updateOnServer(VideoState.EnteringInput);
+      this.updateVideoStateOnServer(VideoState.EnteringInput);
     },
     onFinishedVoting() {
-      this.updateOnServer(VideoState.Playing);
+      this.updateVideoStateOnServer(VideoState.Playing);
     }
   }
 }
