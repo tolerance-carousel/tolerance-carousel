@@ -26,9 +26,18 @@ export default {
   name: 'VideoPlayer',
   props: {},
   computed: {
-    ...mapGetters({videoState: 'videoStateModule/getState', themeId: 'themeModule/getId'})
+    ...mapGetters({
+      videoState: 'videoStateModule/getState',
+      themeId: 'themeModule/getId',
+      getVideoPath: 'themeModule/getVideoPath'
+    })
   },
   watch: {
+    themeId(newId, prevId) {
+      if (newId) {
+        this.updateOnServer(VideoState.Playing);
+      }
+    },
     videoState(newState, prevState) {
       console.log(prevState, '->', newState);
 
@@ -80,6 +89,8 @@ export default {
       }
 
       const self = this;
+
+      this.videoOptions.sources[0].src = this.getVideoPath;
       this.player = videojs(this.$refs.videoPlayer, this.videoOptions, function onPlayerReady() {
         this.on('ended', self.onVideoFinished);
       });
@@ -88,7 +99,6 @@ export default {
   },
   mounted() {
     this.selectThemeById(this.$route.params.themeId);
-    this.updateOnServer(VideoState.Playing);
 
     // TODO: Wait for response before sending new request.
     setInterval(async () => {

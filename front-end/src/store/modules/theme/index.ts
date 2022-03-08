@@ -26,6 +26,10 @@ const themeModule = {
         },
         getIdStr: (state: any): string => {
             return ThemeId[state.id];
+        },
+        getVideoPath: (state: any, getters): string => {
+            const themeId: string = getters.getIdStr;
+            return `/videos/${themeId}/${themeId}.m4v`;
         }
     },
 };
