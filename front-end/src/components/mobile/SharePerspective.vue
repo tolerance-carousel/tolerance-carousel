@@ -41,13 +41,14 @@ export default {
   methods: {
     ...mapActions({
       updateVideoStateOnServer: 'videoStateModule/updateVideoStateOnServer',
+      goToNextVideoOnServer: 'videoStateModule/goToNextVideoOnServer'
     }),
     ...mapMutations({selectThemeById: 'themeModule/selectById'}),
     onSetVoting() {
       this.updateVideoStateOnServer(VideoState.EnteringInput);
     },
     onFinishedVoting() {
-      this.updateVideoStateOnServer(VideoState.Playing);
+      this.goToNextVideoOnServer();
     }
   }
 }

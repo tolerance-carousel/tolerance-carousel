@@ -46,6 +46,23 @@ const videoStateModule = {
                 context.dispatch('updateVideoStateLocally', VideoState.ServerError);
             });
         },
+        goToNextVideoOnServer: async (context: ActionContext<any, any>) => {
+            const themeId: string = context.rootGetters['themeModule/getIdStr'];
+            if (!themeId) {
+                console.log('Did not update server state for theme', themeId);
+                return;
+            }
+
+            await context.dispatch('sendHttpRequest', {
+                url: `${config.SERVER_URL}/next-video?themeId=${themeId}`,
+                responseType: 'json'
+            }, {root: true}).then(response => {
+                console.log('Server state:', response);
+            }).catch(error => {
+                console.warn('Could not update video state on server...', error);
+                context.dispatch('updateVideoStateLocally', VideoState.ServerError);
+            });
+        },
         updateFromServer: async (context: ActionContext<any, any>) => {
             // console.log("Retrieving video state from server...");
             const themeId: string = context.rootGetters['themeModule/getIdStr'];

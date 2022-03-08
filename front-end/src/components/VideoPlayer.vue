@@ -46,12 +46,13 @@ export default {
       handler(newState, prevState) {
         console.log(prevState, '->', newState);
 
+        this.updateVideoPlayerSource();
+
         if (newState.videoState === VideoState.Idle) {
           this.updateVideoStateOnServer(VideoState.Playing);
         }
 
         if (newState.videoState === VideoState.Playing) {
-          this.initVideoPlayer();
         }
 
         if (newState.videoState === VideoState.EnteringInput) {
@@ -73,8 +74,7 @@ export default {
         loop: true,
         sources: [
           {
-            src:
-                "/videos/sample_video_10_sec.m4v",
+            src: null,
             type: "video/mp4"
           }
         ]
@@ -90,6 +90,19 @@ export default {
       updateFromServer: 'videoStateModule/updateFromServer',
     }),
     ...mapMutations({selectThemeById: 'themeModule/selectById'}),
+    updateVideoPlayerSource() {
+      if (!this.player) {
+        this.initVideoPlayer();
+      }
+
+      const currentSource = this.videoOptions.sources[0].src;
+      if(currentSource !== this.getVideoPath) {
+        this.videoOptions.sources[0].src = this.getVideoPath;
+        this.player.src(this.videoOptions.sources[0]);
+        this.player.load();
+        this.player.play();
+      }
+    },
     initVideoPlayer() {
       if (this.player) {
         return;

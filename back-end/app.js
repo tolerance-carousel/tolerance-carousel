@@ -11,9 +11,9 @@ app.use(cors());
 app.use(bodyParser.json());
 
 const playerStates = {
-    "religion": {videoState: VideoState.Idle.name, videoNum: 0},
-    "sexuality": {videoState: VideoState.Idle.name, videoNum: 0},
-    "migration": {videoState: VideoState.Idle.name, videoNum: 0}
+    "religion": {videoState: VideoState.Idle.name, videoNum: 0, totalVideoNum: 1},
+    "sexuality": {videoState: VideoState.Idle.name, videoNum: 0, totalVideoNum: 3},
+    "migration": {videoState: VideoState.Idle.name, videoNum: 0, totalVideoNum: 2}
 }
 
 function isVideoStateValid(state) {
@@ -59,6 +59,22 @@ app.get('/update-video-state', (req, res) => {
     }
 
     playerStates[themeId].videoState = state;
+    res.json(playerStates);
+});
+
+app.get('/next-video', (req, res) => {
+    const themeId = req.query.themeId;
+    if (!isThemeIdValid(themeId)) {
+        return res.status(400).send({
+            message: 'Invalid theme ID'
+        });
+    }
+
+    playerStates[themeId].videoNum++;
+    if(playerStates[themeId].videoNum > playerStates[themeId].totalVideoNum - 1) {
+        playerStates[themeId].videoNum = 0;
+    }
+    playerStates[themeId].videoState = VideoState.PlayingVideo.name;
     res.json(playerStates);
 });
 

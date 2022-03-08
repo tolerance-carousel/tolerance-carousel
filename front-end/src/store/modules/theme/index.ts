@@ -1,4 +1,5 @@
 import {getThemeIdByStr, isValidThemeIdStr, ThemeId} from '../../../models/theme-id';
+import {root} from 'postcss';
 
 const themeModule = {
     namespaced: true,
@@ -8,7 +9,7 @@ const themeModule = {
         };
     },
     mutations: {
-        selectById: (state: any, themeIdStr: string) => {
+        selectById: (state, themeIdStr: string) => {
             if (isValidThemeIdStr(themeIdStr)) {
                 state.id = getThemeIdByStr(themeIdStr);
                 console.log("Selected theme:", state.id);
@@ -21,15 +22,16 @@ const themeModule = {
 
     },
     getters: {
-        getId: (state: any): ThemeId => {
+        getId: (state): ThemeId => {
             return state.id;
         },
-        getIdStr: (state: any): string => {
+        getIdStr: (state): string => {
             return ThemeId[state.id];
         },
-        getVideoPath: (state: any, getters): string => {
+        getVideoPath: (state, getters, rootState, rootGetters): string => {
             const themeId: string = getters.getIdStr;
-            return `/videos/${themeId}/${themeId}.m4v`;
+            const videoNum = rootGetters['videoStateModule/getState'].videoNum;
+            return `/videos/${themeId}/${themeId}-${videoNum+1}.m4v`;
         }
     },
 };
