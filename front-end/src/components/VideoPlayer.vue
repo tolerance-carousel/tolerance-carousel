@@ -64,7 +64,7 @@ export default {
       videoOptions: {
         autoplay: true,
         controls: false,
-        loop: false,
+        loop: true,
         sources: [
           {
             src:

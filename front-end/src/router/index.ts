@@ -1,6 +1,6 @@
 import {createRouter, createWebHistory, Router} from 'vue-router';
 import VideoPlayer from '../components/VideoPlayer.vue';
-import Polis from '../components/mobile/Polis.vue';
+import SharePerspective from '../components/mobile/SharePerspective.vue';
 
 const routes = [
     {
@@ -9,9 +9,9 @@ const routes = [
         component: VideoPlayer
     },
     {
-        path: '/polis',
-        name: 'Polis',
-        component: Polis
+        path: '/share-perspective/:themeId',
+        name: 'SharePerspective',
+        component: SharePerspective
     },
 ];
 const router: Router = createRouter({

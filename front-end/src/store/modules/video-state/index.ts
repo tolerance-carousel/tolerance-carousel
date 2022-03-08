@@ -24,6 +24,7 @@ const videoStateModule = {
         updateOnServer: async (context: ActionContext<any, any>, newVideoState: VideoState) => {
             const themeId: string = context.rootGetters['themeModule/getIdStr'];
             if (!themeId) {
+                console.log("Did not update server state for theme", themeId);
                 return;
             }
 

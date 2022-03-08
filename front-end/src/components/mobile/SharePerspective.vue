@@ -14,22 +14,35 @@
 </template>
 
 <script>
-import {mapActions} from "vuex";
+import {mapActions, mapGetters, mapMutations} from "vuex";
 import {VideoState} from "../../models/video-state";
 
 export default {
-  name: "Polis",
+  name: "SharePerspective",
+  watch: {
+    themeId(newId, prevId) {
+      if (newId) {
+        this.updateOnServer(VideoState.EnteringInput);
+      }
+    }
+  },
   mounted() {
     // let polisEmbedScript = document.createElement('script');
     // polisEmbedScript.setAttribute('src', 'https://pol.is/embed.js');
     // document.head.appendChild(polisEmbedScript);
 
-    this.updateOnServer(VideoState.EnteringInput);
+    this.selectThemeById(this.$route.params.themeId);
+  },
+  computed: {
+    ...mapGetters({
+      themeId: 'themeModule/getId',
+    })
   },
   methods: {
     ...mapActions({
       updateOnServer: 'videoStateModule/updateOnServer',
     }),
+    ...mapMutations({selectThemeById: 'themeModule/selectById'}),
     onSetVoting() {
       this.updateOnServer(VideoState.EnteringInput);
     },
