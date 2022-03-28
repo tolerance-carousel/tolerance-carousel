@@ -1,20 +1,11 @@
 <template>
   <div class="m-2" v-if="playerState.videoState === VideoState.Welcome">
-    <p>[BRIEF SURVEY]</p>
-    <button @click="onStartVideo">START</button>
+    <p>{{themeId}}</p>
   </div>
   <div class="m-2" v-if="playerState.videoState === VideoState.Playing">
     <p>(Watch video on screen)</p>
   </div>
-  <div class="m-2" v-if="playerState.videoState === VideoState.EnteringInput">
-    <div>
-      <p>Share your perspective:</p>
-      <input type="text" class="border-2"/>
-    </div>
-    <div class="mt-2">
-      <button @click="onFinishedVoting">Done voting</button>
-    </div>
-  </div>
+  <div class='polis' data-conversation_id='7zjcnxfbpm' v-show="playerState.videoState === VideoState.EnteringInput"></div>
 </template>
 
 <script>
@@ -36,9 +27,10 @@ export default {
     }
   },
   mounted() {
-    // let polisEmbedScript = document.createElement('script');
-    // polisEmbedScript.setAttribute('src', 'https://pol.is/embed.js');
-    // document.head.appendChild(polisEmbedScript);
+    // TODO: Reload every time another theme shows up (-> updating to a new Polis conversation with another ID)
+    let polisEmbedScript = document.createElement('script');
+    polisEmbedScript.setAttribute('src', '/embed.js');
+    document.head.appendChild(polisEmbedScript);
 
     this.selectThemeById(this.$route.params.themeId);
 
@@ -72,4 +64,8 @@ export default {
 </script>
 
 <style>
+.polis iframe {
+  height: 100vh;
+  width: 100vw;
+}
 </style>
