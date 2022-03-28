@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const {VideoState} = require("./models/video-state");
 
-const TIME_BEFORE_NEW_VIDEO_STARTS = 10 * 1000; // 60 * 1000;
+const TIME_TO_ENTER_INPUT = 5 * 1000;
 const app = express();
 
 app.use(morgan('tiny'));
@@ -16,19 +16,19 @@ const playerStates = {
         videoState: VideoState.Welcome.name,
         videoNum: 0,
         totalVideoNum: 1,
-        startsAt: Date.now() + TIME_BEFORE_NEW_VIDEO_STARTS
+        startsAt: -1
     },
     "sexuality": {
         videoState: VideoState.Welcome.name,
         videoNum: 0,
         totalVideoNum: 3,
-        startsAt: Date.now() + TIME_BEFORE_NEW_VIDEO_STARTS
+        startsAt: -1
     },
     "migration": {
         videoState: VideoState.Welcome.name,
         videoNum: 0,
         totalVideoNum: 2,
-        startsAt: Date.now() + TIME_BEFORE_NEW_VIDEO_STARTS
+        startsAt: -1
     }
 }
 
@@ -77,7 +77,11 @@ app.get('/update-video-state', (req, res) => {
     playerStates[themeId].videoState = state;
 
     if (state === VideoState.Welcome.name) {
-        playerStates[themeId].startsAt = Date.now() + TIME_BEFORE_NEW_VIDEO_STARTS;
+        playerStates[themeId].videoNum = 0;
+    }
+
+    if (state === VideoState.EnteringInput.name) {
+        playerStates[themeId].startsAt = Date.now() + TIME_TO_ENTER_INPUT;
     }
 
     res.json(playerStates);

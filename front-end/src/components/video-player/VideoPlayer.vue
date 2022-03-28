@@ -6,7 +6,6 @@
   <div v-if="videoState === VideoState.Welcome" class="m-2">
     <a :href="`/share-perspective/${this.themeIdStr}`"><img :src="`/qr-codes/${this.themeIdStr}.png`"
                                                             :alt="`${this.themeId} QR Code`" class="mx-auto"></a>
-    <video-player-countdown :video-starts-at="playerState.startsAt"></video-player-countdown>
   </div>
   <div v-show="videoState === VideoState.Playing || videoState === VideoState.EnteringInput">
     <div class="h-screen w-screen bg-gray-800">
@@ -16,7 +15,14 @@
     <div v-if="isDevMode && themeId" class="absolute text-white drop-shadow-md top-0">
       <p>Theme: {{ themeId }}</p>
       <p>PlayerState: {{ playerState }}</p>
+
+      <div v-if="videoState === VideoState.EnteringInput">
+        <p>ENTERING INPUT</p>
+        <video-player-countdown :video-starts-at="playerState.startsAt"></video-player-countdown>
+      </div>
     </div>
+
+
   </div>
 
 </template>

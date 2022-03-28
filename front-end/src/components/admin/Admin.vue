@@ -6,6 +6,13 @@
   <div>
     <button @click="resetVideo('sexuality')">Reset sexuality video</button>
   </div>
+
+  <div>
+    <button @click="startVideo('migration')">Start migration video</button>
+  </div>
+  <div>
+    <button @click="resetVideo('migration')">Reset migration video</button>
+  </div>
 </template>
 
 <script lang="ts">

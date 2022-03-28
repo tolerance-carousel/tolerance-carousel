@@ -12,7 +12,8 @@ export default {
   props: ['videoStartsAt'],
   data() {
     return {
-      videoStartsIn: ""
+      videoStartsIn: "",
+      countingDown: false
     }
   },
   computed: {
@@ -23,25 +24,36 @@ export default {
       return this.playerState.videoState;
     }
   },
+  watch: {
+    playerState: {
+      deep: true,
+      handler(newState, prevState) {
+        this.countingDown = true;
+      }
+    }
+  },
   methods: {
     ...mapActions({
-      updateVideoStateOnServer: 'videoStateModule/updateVideoStateOnServer'
+      updateVideoStateOnServer: 'videoStateModule/updateVideoStateOnServer',
+      goToNextVideoOnServer: 'videoStateModule/goToNextVideoOnServer'
     }),
     updateVideoStartsIn() {
-      if (!this.videoStartsAt || this.videoStartsAt < 0) {
+      if (!this.videoStartsAt || this.videoStartsAt < 0 || !this.countingDown) {
         this.videoStartsIn = "";
         return;
       }
 
       const videoStartsInMs = this.videoStartsAt - Date.now();
-      if (videoStartsInMs <= 0 && this.videoState !== VideoState.Playing) {
-        // TODO: Prevent many requests from firing successively.
-        this.updateVideoStateOnServer(VideoState.Playing);
+      if (videoStartsInMs <= 0 && this.videoState === VideoState.EnteringInput) {
+        this.goToNextVideoOnServer();
+        this.countingDown = false;
       }
       this.videoStartsIn = millisecondsToStr(videoStartsInMs);
     },
   },
   mounted() {
+    this.countingDown = true;
+
     setInterval(() => {
       this.updateVideoStartsIn();
     }, 100);
