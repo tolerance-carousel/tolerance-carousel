@@ -6,7 +6,7 @@
   <div v-if="videoState === VideoState.Welcome" class="m-2">
     <a :href="`/share-perspective/${this.themeIdStr}`"><img :src="`/qr-codes/${this.themeIdStr}.png`"
                                                             :alt="`${this.themeId} QR Code`" class="mx-auto"></a>
-    <p v-if="playerState.startsAt > 0">Starts in: {{ videoStartsIn }}</p>
+    <video-player-countdown :video-starts-at="playerState.startsAt"></video-player-countdown>
   </div>
   <div v-show="videoState === VideoState.Playing || videoState === VideoState.EnteringInput">
     <div class="h-screen w-screen bg-gray-800">
@@ -23,12 +23,13 @@
 
 <script>
 import videojs from "video.js";
-import {VideoState} from "../models/video-state";
 import {mapActions, mapGetters, mapMutations} from "vuex";
-import {millisecondsToStr} from "../utils/time-utils";
+import VideoPlayerCountdown from "./VideoPlayerCountdown.vue";
+import {VideoState} from "../../models/video-state";
 
 export default {
   name: 'VideoPlayer',
+  components: {VideoPlayerCountdown},
   props: {},
   computed: {
     ...mapGetters({
@@ -83,7 +84,6 @@ export default {
           }
         ]
       },
-      videoStartsIn: -1
     }
   },
   methods: {
@@ -124,9 +124,7 @@ export default {
       });
       console.log("Initialized video player...", this.$refs.videoPlayer);
     },
-    updateVideoStartsIn() {
-      this.videoStartsIn = millisecondsToStr(this.playerState.startsAt - Date.now());
-    }
+
   },
   mounted() {
     this.selectThemeById(this.$route.params.themeId);
@@ -135,10 +133,6 @@ export default {
     setInterval(async () => {
       await this.updateFromServer();
     }, import.meta.env.APP_POLL_SERVER_EVERY_MS);
-
-    setInterval(() => {
-      this.updateVideoStartsIn();
-    }, 100);
   },
   beforeDestroy() {
     if (this.player) {
