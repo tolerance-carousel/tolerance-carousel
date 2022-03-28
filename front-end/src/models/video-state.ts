@@ -8,4 +8,5 @@ export enum VideoState {
 export interface VideoPlayerState {
     videoState: VideoState;
     videoNum: number;
+    startsAt: number;
 }

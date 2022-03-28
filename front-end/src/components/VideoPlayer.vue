@@ -4,7 +4,9 @@
     <p><em>We are experiencing technical difficulties... Our apologies for the inconvenience.</em></p>
   </div>
   <div v-if="videoState === VideoState.Welcome" class="m-2">
-    <a :href="`/share-perspective/${this.themeIdStr}`"><img :src="`/qr-codes/${this.themeIdStr}.png`" :alt="`${this.themeId} QR Code`" class="mx-auto"></a>
+    <a :href="`/share-perspective/${this.themeIdStr}`"><img :src="`/qr-codes/${this.themeIdStr}.png`"
+                                                            :alt="`${this.themeId} QR Code`" class="mx-auto"></a>
+    <p v-if="playerState.startsAt > 0">Starts in: {{ videoStartsIn }}</p>
   </div>
   <div v-show="videoState === VideoState.Playing || videoState === VideoState.EnteringInput">
     <div class="h-screen w-screen bg-gray-800">
@@ -23,6 +25,7 @@
 import videojs from "video.js";
 import {VideoState} from "../models/video-state";
 import {mapActions, mapGetters, mapMutations} from "vuex";
+import {millisecondsToStr} from "../utils/time-utils";
 
 export default {
   name: 'VideoPlayer',
@@ -79,7 +82,8 @@ export default {
             type: "video/mp4"
           }
         ]
-      }
+      },
+      videoStartsIn: -1
     }
   },
   methods: {
@@ -119,6 +123,9 @@ export default {
         this.on('ended', self.onVideoFinished);
       });
       console.log("Initialized video player...", this.$refs.videoPlayer);
+    },
+    updateVideoStartsIn() {
+      this.videoStartsIn = millisecondsToStr(this.playerState.startsAt - Date.now());
     }
   },
   mounted() {
@@ -128,6 +135,10 @@ export default {
     setInterval(async () => {
       await this.updateFromServer();
     }, import.meta.env.APP_POLL_SERVER_EVERY_MS);
+
+    setInterval(() => {
+      this.updateVideoStartsIn();
+    }, 100);
   },
   beforeDestroy() {
     if (this.player) {

@@ -7,7 +7,8 @@ const videoStateModule = {
         return {
             playerState: {
                 videoState: VideoState.Welcome,
-                videoNum: 0
+                videoNum: 0,
+                startsAt: -1
             }
         };
     },

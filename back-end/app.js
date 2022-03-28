@@ -11,9 +11,9 @@ app.use(cors());
 app.use(bodyParser.json());
 
 const playerStates = {
-    "religion": {videoState: VideoState.Welcome.name, videoNum: 0, totalVideoNum: 1},
-    "sexuality": {videoState: VideoState.Welcome.name, videoNum: 0, totalVideoNum: 3},
-    "migration": {videoState: VideoState.Welcome.name, videoNum: 0, totalVideoNum: 2}
+    "religion": {videoState: VideoState.Welcome.name, videoNum: 0, totalVideoNum: 1, startsAt: Date.now()+10000},
+    "sexuality": {videoState: VideoState.Welcome.name, videoNum: 0, totalVideoNum: 3, startsAt: Date.now()+10000},
+    "migration": {videoState: VideoState.Welcome.name, videoNum: 0, totalVideoNum: 2, startsAt: Date.now()+10000}
 }
 
 function isVideoStateValid(state) {
