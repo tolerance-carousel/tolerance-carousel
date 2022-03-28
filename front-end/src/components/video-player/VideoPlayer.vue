@@ -64,6 +64,11 @@ export default {
           if (newState.videoState === VideoState.EnteringInput) {
             this.player.pause();
           }
+
+          if (newState.videoState === VideoState.Welcome) {
+            this.player.pause();
+            this.player.currentTime(0);
+          }
         }
       }
     }

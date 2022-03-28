@@ -1,10 +1,32 @@
 <template>
   <p>ADMIN PANEL</p>
-  <button>Start religion video</button>
+  <div>
+    <button @click="startVideo('sexuality')">Start sexuality video</button>
+  </div>
+  <div>
+    <button @click="resetVideo('sexuality')">Reset sexuality video</button>
+  </div>
 </template>
 
-<script>
+<script lang="ts">
+import {mapActions, mapMutations} from "vuex";
+import {VideoState} from "../../models/video-state";
+
 export default {
-  name: 'Admin'
+  name: 'Admin',
+  methods: {
+    ...mapMutations({selectThemeById: 'themeModule/selectById'}),
+    ...mapActions({
+      updateVideoStateOnServer: 'videoStateModule/updateVideoStateOnServer',
+    }),
+    startVideo(themeId: string) {
+      this.selectThemeById(themeId);
+      this.updateVideoStateOnServer(VideoState.Playing);
+    },
+    resetVideo(themeId: string) {
+      this.selectThemeById(themeId);
+      this.updateVideoStateOnServer(VideoState.Welcome);
+    },
+  }
 }
 </script>

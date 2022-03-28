@@ -29,5 +29,5 @@ export function millisecondsToStr(milliseconds) {
     if (seconds) {
         return seconds + ' second' + numberEnding(seconds);
     }
-    return 'just now';
+    return 'now!';
 }

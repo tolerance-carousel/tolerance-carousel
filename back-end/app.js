@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const {VideoState} = require("./models/video-state");
 
+const TIME_BEFORE_NEW_VIDEO_STARTS = 10 * 1000; // 60 * 1000;
 const app = express();
 
 app.use(morgan('tiny'));
@@ -11,9 +12,24 @@ app.use(cors());
 app.use(bodyParser.json());
 
 const playerStates = {
-    "religion": {videoState: VideoState.Welcome.name, videoNum: 0, totalVideoNum: 1, startsAt: Date.now()+10000},
-    "sexuality": {videoState: VideoState.Welcome.name, videoNum: 0, totalVideoNum: 3, startsAt: Date.now()+10000},
-    "migration": {videoState: VideoState.Welcome.name, videoNum: 0, totalVideoNum: 2, startsAt: Date.now()+10000}
+    "religion": {
+        videoState: VideoState.Welcome.name,
+        videoNum: 0,
+        totalVideoNum: 1,
+        startsAt: Date.now() + TIME_BEFORE_NEW_VIDEO_STARTS
+    },
+    "sexuality": {
+        videoState: VideoState.Welcome.name,
+        videoNum: 0,
+        totalVideoNum: 3,
+        startsAt: Date.now() + TIME_BEFORE_NEW_VIDEO_STARTS
+    },
+    "migration": {
+        videoState: VideoState.Welcome.name,
+        videoNum: 0,
+        totalVideoNum: 2,
+        startsAt: Date.now() + TIME_BEFORE_NEW_VIDEO_STARTS
+    }
 }
 
 function isVideoStateValid(state) {
@@ -59,6 +75,11 @@ app.get('/update-video-state', (req, res) => {
     }
 
     playerStates[themeId].videoState = state;
+
+    if (state === VideoState.Welcome.name) {
+        playerStates[themeId].startsAt = Date.now() + TIME_BEFORE_NEW_VIDEO_STARTS;
+    }
+
     res.json(playerStates);
 });
 
@@ -71,7 +92,7 @@ app.get('/next-video', (req, res) => {
     }
 
     playerStates[themeId].videoNum++;
-    if(playerStates[themeId].videoNum > playerStates[themeId].totalVideoNum - 1) {
+    if (playerStates[themeId].videoNum > playerStates[themeId].totalVideoNum - 1) {
         playerStates[themeId].videoNum = 0;
         playerStates[themeId].videoState = VideoState.Welcome.name;
     } else {
