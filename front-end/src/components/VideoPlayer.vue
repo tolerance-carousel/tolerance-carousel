@@ -4,7 +4,7 @@
     <p><em>We are experiencing technical difficulties... Our apologies for the inconvenience.</em></p>
   </div>
   <div v-if="videoState === VideoState.Welcome" class="m-2">
-    <img :src="`/qr-codes/${this.themeIdStr}.png`" :alt="`${this.themeId} QR Code`" class="mx-auto">
+    <a :href="`/share-perspective/${this.themeIdStr}`"><img :src="`/qr-codes/${this.themeIdStr}.png`" :alt="`${this.themeId} QR Code`" class="mx-auto"></a>
   </div>
   <div v-show="videoState === VideoState.Playing || videoState === VideoState.EnteringInput">
     <div class="h-screen w-screen bg-gray-800">
