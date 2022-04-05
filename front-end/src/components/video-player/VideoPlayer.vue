@@ -12,7 +12,7 @@
       <video ref="videoPlayer" class="video-js w-full h-full"></video>
     </div>
 
-    <div v-if="isDevMode && themeId" class="absolute text-white drop-shadow-md top-0">
+    <div v-if="themeId" class="absolute text-white drop-shadow-md top-0">
       <p>Theme: {{ themeId }}</p>
       <p>PlayerState: {{ playerState }}</p>
 
