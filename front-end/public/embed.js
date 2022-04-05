@@ -3,7 +3,7 @@
   var firstRun = !window.polis._hasRun;
   polis._hasRun = 1;
   var iframes = [];
-  var polisUrl = "http://84.247.13.154:5000";
+  var polisUrl = "https://polis.boasmedia.nl";
   var maxHeightsSeen = {};
 
   polis.on = polis.on || {};
