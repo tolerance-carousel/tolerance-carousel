@@ -11,59 +11,75 @@ app.use(morgan('tiny'));
 app.use(cors());
 app.use(bodyParser.json());
 
-const playerStates = {
-    "religion": {
+const states = {
+    "room_1": {
+        currentTheme: "religion",
         videoState: VideoState.Welcome.name,
-        videoNum: 0,
-        totalVideoNum: 1,
         startsAt: -1
     },
-    "sexuality": {
+    "room_2": {
+        currentTheme: "religion",
         videoState: VideoState.Welcome.name,
-        videoNum: 0,
-        totalVideoNum: 3,
         startsAt: -1
     },
-    "migration": {
+    "room_3": {
+        currentTheme: "religion",
         videoState: VideoState.Welcome.name,
-        videoNum: 0,
-        totalVideoNum: 2,
         startsAt: -1
     }
-}
+};
+
+const themeIds = ["religion", "migration", "sexuality"];
 
 function isVideoStateValid(state) {
     return state && VideoState.GetAllNames().includes(state);
 }
 
 function isThemeIdValid(themeId) {
-    return themeId && Object.keys(playerStates).includes(themeId);
+    return themeId && themeIds.includes(themeId);
+}
+
+function isRoomIdValid(roomId) {
+    return roomId && Object.keys(states).includes(roomId);
+}
+
+function getNextTheme(currentTheme) {
+    if (currentTheme === "religion") {
+        return "migration";
+    }
+    if (currentTheme === "migration") {
+        return "sexuality";
+    }
+    if (currentTheme === "sexuality") {
+        return "religion";
+    }
+    return undefined;
 }
 
 app.get('/', (req, res) => {
-    res.json(playerStates);
+    res.json(states);
 });
 
 app.get('/get-state', (req, res) => {
-    const themeId = req.query.themeId;
-    if (!isThemeIdValid(themeId)) {
-        console.warn("Invalid theme ID:", themeId);
+    const roomId = req.query.roomId;
+    if (!isRoomIdValid(roomId)) {
+        console.warn("Invalid room ID:", roomId);
         return res.status(400).send({
-            message: 'Invalid theme ID'
+            message: 'Invalid room ID'
         });
     }
-    res.json(playerStates[themeId]);
+    res.json(states[roomId]);
 });
 
 app.get('/get-states', (req, res) => {
-    res.json(playerStates);
+    res.json(states);
 });
 
 app.get('/update-video-state', (req, res) => {
-    const themeId = req.query.themeId;
-    if (!isThemeIdValid(themeId)) {
+    const roomId = req.query.roomId;
+    if (!isRoomIdValid(roomId)) {
         return res.status(400).send({
-            message: 'Invalid theme ID'
+            message: 'Invalid room ID'
         });
     }
 
@@ -74,35 +90,27 @@ app.get('/update-video-state', (req, res) => {
         });
     }
 
-    playerStates[themeId].videoState = state;
-
-    if (state === VideoState.Welcome.name) {
-        playerStates[themeId].videoNum = 0;
-    }
+    states[roomId].videoState = state;
 
     if (state === VideoState.EnteringInput.name) {
-        playerStates[themeId].startsAt = Date.now() + TIME_TO_ENTER_INPUT;
+        states[roomId].startsAt = Date.now() + TIME_TO_ENTER_INPUT;
     }
 
-    res.json(playerStates);
+    res.json(states);
 });
 
 app.get('/next-video', (req, res) => {
-    const themeId = req.query.themeId;
-    if (!isThemeIdValid(themeId)) {
+    const roomId = req.query.roomId;
+    if (!isRoomIdValid(roomId)) {
         return res.status(400).send({
-            message: 'Invalid theme ID'
+            message: 'Invalid room ID'
         });
     }
 
-    playerStates[themeId].videoNum++;
-    if (playerStates[themeId].videoNum > playerStates[themeId].totalVideoNum - 1) {
-        playerStates[themeId].videoNum = 0;
-        playerStates[themeId].videoState = VideoState.Welcome.name;
-    } else {
-        playerStates[themeId].videoState = VideoState.PlayingVideo.name;
-    }
-    res.json(playerStates);
+    states[roomId].currentTheme = getNextTheme(states[roomId].currentTheme);
+    states[roomId].videoState = VideoState.PlayingVideo.name;
+
+    res.json(states);
 });
 
 const port = process.env.PORT || 4000;

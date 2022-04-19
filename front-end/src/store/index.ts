@@ -1,14 +1,14 @@
 import {createStore} from 'vuex';
 import videoStateModule from './modules/video-state';
-import themeModule from './modules/theme';
 import {ThemeId} from '../models/theme-id';
+import roomModule from "./modules/room";
 
 interface State {
     themeId: ThemeId | null
 }
 
 const store = createStore<State>({
-    modules: {videoStateModule, themeModule},
+    modules: {videoStateModule, roomModule},
     actions: {
         sendHttpRequest: async (context, {url, responseType}) => {
             return new Promise(function (resolve, reject) {

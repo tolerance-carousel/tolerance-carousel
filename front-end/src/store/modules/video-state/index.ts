@@ -6,8 +6,8 @@ const videoStateModule = {
     state() {
         return {
             playerState: {
+                currentTheme: "religion",
                 videoState: VideoState.Welcome,
-                videoNum: 0,
                 startsAt: -1
             }
         };
@@ -30,14 +30,14 @@ const videoStateModule = {
             context.commit('updateLocally', playerState);  
         },
         updateVideoStateOnServer: async (context: ActionContext<any, any>, newState: VideoState) => {
-            const themeId: string = context.rootGetters['themeModule/getIdStr'];
-            if (!themeId) {
-                console.log('Did not update server state for theme', themeId);
+            const roomId: string = context.rootGetters['roomModule/getId'];
+            if (!roomId) {
+                console.log('Did not update server state for room', roomId);
                 return;
             }
 
             await context.dispatch('sendHttpRequest', {
-                url: `${import.meta.env.APP_SERVER_URL}/update-video-state?themeId=${themeId}&state=${newState}`,
+                url: `${import.meta.env.APP_SERVER_URL}/update-video-state?roomId=${roomId}&state=${newState}`,
                 responseType: 'json'
             }, {root: true}).then(response => {
                 console.log('Server state:', response);
@@ -47,14 +47,14 @@ const videoStateModule = {
             });
         },
         goToNextVideoOnServer: async (context: ActionContext<any, any>) => {
-            const themeId: string = context.rootGetters['themeModule/getIdStr'];
-            if (!themeId) {
-                console.log('Did not update server state for theme', themeId);
+            const roomId: string = context.rootGetters['roomModule/getId'];
+            if (!roomId) {
+                console.log('Did not update server state for room', roomId);
                 return;
             }
 
             await context.dispatch('sendHttpRequest', {
-                url: `${import.meta.env.APP_SERVER_URL}/next-video?themeId=${themeId}`,
+                url: `${import.meta.env.APP_SERVER_URL}/next-video?roomId=${roomId}`,
                 responseType: 'json'
             }, {root: true}).then(response => {
                 console.log('Server state:', response);
@@ -65,12 +65,12 @@ const videoStateModule = {
         },
         updateFromServer: async (context: ActionContext<any, any>) => {
             // console.log("Retrieving video state from server...", import.meta.env);
-            const themeId: string = context.rootGetters['themeModule/getIdStr'];
-            if (!themeId) {
+            const roomId: string = context.rootGetters['roomModule/getId'];
+            if (!roomId) {
                 return;
             }
             await context.dispatch('sendHttpRequest', {
-                url: `${import.meta.env.APP_SERVER_URL}/get-state?themeId=${context.rootGetters['themeModule/getIdStr']}`,
+                url: `${import.meta.env.APP_SERVER_URL}/get-state?roomId=${roomId}`,
                 responseType: 'json'
             }, {root: true}).then(playerState => {
                 if(!playerState) {
@@ -87,6 +87,9 @@ const videoStateModule = {
     getters: {
         getState: (state: any) => {
             return state.playerState;
+        },
+        getVideoPath: (state: any) => {
+            return `/videos/${state.playerState.currentTheme}/${state.playerState.currentTheme}.m4v`;
         }
     },
 };
