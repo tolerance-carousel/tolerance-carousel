@@ -16,6 +16,16 @@ const states = {
         currentTheme: "religion",
         videoState: VideoState.Welcome.name,
         startsAt: -1
+    },
+    "room_2": {
+        currentTheme: "religion",
+        videoState: VideoState.Welcome.name,
+        startsAt: -1
+    },
+    "room_3": {
+        currentTheme: "religion",
+        videoState: VideoState.Welcome.name,
+        startsAt: -1
     }
 };
 
