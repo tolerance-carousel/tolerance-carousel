@@ -10,6 +10,10 @@
            :alt="`${this.playerState.currentTheme} QR Code`"
            class="mx-auto">
     </a>
+
+    <div class="text-center">
+      <button @click="onStartVideo()">Start the show</button>
+    </div>
   </div>
   <div v-show="videoState === VideoState.Playing || videoState === VideoState.EnteringInput">
     <div class="h-screen w-screen bg-gray-800">
@@ -17,6 +21,7 @@
     </div>
 
     <div v-if="roomId" class="absolute text-white drop-shadow-md top-0">
+      <button @click="onStartVideo()">Play video</button>
       <p>Room: {{ roomId }}</p>
       <p>PlayerState: {{ playerState }}</p>
 
@@ -136,7 +141,12 @@ export default {
       });
       console.log("Initialized video player...", this.$refs.videoPlayer);
     },
-
+    onStartVideo() {
+      this.updateVideoStateOnServer(VideoState.Playing);
+      if(this.player) {
+        this.player.play();
+      }
+    }
   },
   mounted() {
     this.selectRoomById(this.$route.params.roomId);
