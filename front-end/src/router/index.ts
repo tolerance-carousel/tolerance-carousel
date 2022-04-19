@@ -5,12 +5,12 @@ import Admin from '../components/admin/Admin.vue';
 
 const routes = [
     {
-        path: '/video/:themeId',
+        path: '/video/:roomId',
         name: 'Video',
         component: VideoPlayer
     },
     {
-        path: '/share-perspective/:themeId',
+        path: '/share-perspective/:roomId',
         name: 'SharePerspective',
         component: SharePerspective
     },

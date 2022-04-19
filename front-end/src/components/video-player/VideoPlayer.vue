@@ -1,19 +1,23 @@
 <template>
-  <div v-if="!themeId">Error: Theme ID is incorrect.</div>
+  <div v-if="!roomId">Error: Room ID is incorrect.</div>
   <div v-if="videoState === VideoState.ServerError" class="m-2">
     <p><em>We are experiencing technical difficulties... Our apologies for the inconvenience.</em></p>
   </div>
   <div v-if="videoState === VideoState.Welcome" class="m-2">
-    <a :href="`/share-perspective/${this.themeIdStr}`"><img :src="`/qr-codes/${this.themeIdStr}.png`"
-                                                            :alt="`${this.themeId} QR Code`" class="mx-auto"></a>
+    <!--    TODO: Create QR codes for all available rooms (or create QR codes dynamically) -->
+    <a :href="`/share-perspective/${roomId}`">
+      <img :src="`/qr-codes/${this.playerState.currentTheme}.png`"
+           :alt="`${this.playerState.currentTheme} QR Code`"
+           class="mx-auto">
+    </a>
   </div>
   <div v-show="videoState === VideoState.Playing || videoState === VideoState.EnteringInput">
     <div class="h-screen w-screen bg-gray-800">
       <video ref="videoPlayer" class="video-js w-full h-full"></video>
     </div>
 
-    <div v-if="themeId" class="absolute text-white drop-shadow-md top-0">
-      <p>Theme: {{ themeId }}</p>
+    <div v-if="roomId" class="absolute text-white drop-shadow-md top-0">
+      <p>Room: {{ roomId }}</p>
       <p>PlayerState: {{ playerState }}</p>
 
       <div v-if="videoState === VideoState.EnteringInput">
@@ -40,19 +44,17 @@ export default {
   computed: {
     ...mapGetters({
       playerState: 'videoStateModule/getState',
-      themeId: 'themeModule/getId',
-      themeIdStr: 'themeModule/getIdStr',
-      getVideoPath: 'themeModule/getVideoPath'
+      roomId: 'roomModule/getId',
+      getVideoPath: 'videoStateModule/getVideoPath'
     }),
     videoState() {
       return this.playerState.videoState;
     }
   },
   watch: {
-    themeId(newId, prevId) {
-      if (newId) {
-        // this.updateVideoStateOnServer(VideoState.Welcome);
-      }
+    roomId(newId, prevId) {
+      // if (newId) {
+      // }
     },
     playerState: {
       deep: true,
@@ -63,7 +65,6 @@ export default {
           this.updateVideoPlayerSource();
 
           if (newState.videoState === VideoState.Playing) {
-            // TODO: Fix issue of video not playing in production made (might be timing-related)
             this.player.play();
           }
 
@@ -105,7 +106,7 @@ export default {
       updateVideoStateOnServer: 'videoStateModule/updateVideoStateOnServer',
       updateFromServer: 'videoStateModule/updateFromServer',
     }),
-    ...mapMutations({selectThemeById: 'themeModule/selectById'}),
+    ...mapMutations({selectRoomById: 'roomModule/selectById'}),
     updateVideoPlayerSource() {
       if (!this.player) {
         this.initVideoPlayer();
@@ -138,7 +139,7 @@ export default {
 
   },
   mounted() {
-    this.selectThemeById(this.$route.params.themeId);
+    this.selectRoomById(this.$route.params.roomId);
 
     // TODO: Wait for response before sending new request.
     setInterval(async () => {

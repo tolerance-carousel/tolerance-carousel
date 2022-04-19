@@ -1,17 +1,10 @@
 <template>
   <p>ADMIN PANEL</p>
   <div>
-    <button @click="startVideo('sexuality')">Start sexuality video</button>
+    <button @click="startVideo('room_1')">Start room_1 video</button>
   </div>
   <div>
-    <button @click="resetVideo('sexuality')">Reset sexuality video</button>
-  </div>
-
-  <div>
-    <button @click="startVideo('migration')">Start migration video</button>
-  </div>
-  <div>
-    <button @click="resetVideo('migration')">Reset migration video</button>
+    <button @click="resetVideo('room_1')">Reset room_1 video</button>
   </div>
 </template>
 
@@ -22,16 +15,16 @@ import {VideoState} from "../../models/video-state";
 export default {
   name: 'Admin',
   methods: {
-    ...mapMutations({selectThemeById: 'themeModule/selectById'}),
+    ...mapMutations({selectRoomById: 'roomModule/selectById'}),
     ...mapActions({
       updateVideoStateOnServer: 'videoStateModule/updateVideoStateOnServer',
     }),
-    startVideo(themeId: string) {
-      this.selectThemeById(themeId);
+    startVideo(roomId: string) {
+      this.selectRoomById(roomId);
       this.updateVideoStateOnServer(VideoState.Playing);
     },
-    resetVideo(themeId: string) {
-      this.selectThemeById(themeId);
+    resetVideo(roomId: string) {
+      this.selectRoomById(roomId);
       this.updateVideoStateOnServer(VideoState.Welcome);
     },
   }

@@ -1,11 +1,13 @@
 <template>
+  <div class="m-2">Room theme: {{playerState.currentTheme}}</div>
   <div class="m-2" v-if="playerState.videoState === VideoState.Welcome">
-    <p>{{themeId}}</p>
+    <p>Waiting for video to start... Theme: {{ themeId }}</p>
   </div>
   <div class="m-2" v-if="playerState.videoState === VideoState.Playing">
     <p>(Watch video on screen)</p>
   </div>
-  <div class='polis' data-conversation_id='7zjcnxfbpm' v-show="playerState.videoState === VideoState.EnteringInput"></div>
+  <div class='polis' data-conversation_id='7zjcnxfbpm'
+       v-show="playerState.videoState === VideoState.EnteringInput"></div>
 </template>
 
 <script>
@@ -16,24 +18,19 @@ export default {
   name: "SharePerspective",
   data() {
     return {
-      VideoState: VideoState
+      VideoState: VideoState,
+      themeId: ""
     }
   },
-  watch: {
-    themeId(newId, prevId) {
-      if (newId) {
-        // this.updateVideoStateOnServer(VideoState.Playing);
-      }
-    }
-  },
+  watch: {},
   mounted() {
     // TODO: Reload every time another theme shows up (-> updating to a new Polis conversation with another ID)
     let polisEmbedScript = document.createElement('script');
     polisEmbedScript.setAttribute('src', '/embed.js');
     document.head.appendChild(polisEmbedScript);
 
-    this.selectThemeById(this.$route.params.themeId);
-
+    const roomId = this.$route.params.roomId;
+    this.selectRoomById(roomId);
 
     // TODO: Wait for response before sending new request.
     setInterval(async () => {
@@ -42,7 +39,6 @@ export default {
   },
   computed: {
     ...mapGetters({
-      themeId: 'themeModule/getId',
       playerState: "videoStateModule/getState"
     })
   },
@@ -52,7 +48,7 @@ export default {
       updateFromServer: 'videoStateModule/updateFromServer',
       goToNextVideoOnServer: 'videoStateModule/goToNextVideoOnServer'
     }),
-    ...mapMutations({selectThemeById: 'themeModule/selectById'}),
+    ...mapMutations({selectRoomById: 'roomModule/selectById'}),
     onStartVideo() {
       this.updateVideoStateOnServer(VideoState.Playing);
     },
