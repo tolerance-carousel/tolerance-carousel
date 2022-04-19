@@ -1,13 +1,16 @@
 <template>
-  <div class="m-2">Room theme: {{playerState.currentTheme}}</div>
+  <div class="m-2">Room theme: {{ currentTheme }}</div>
   <div class="m-2" v-if="playerState.videoState === VideoState.Welcome">
-    <p>Waiting for video to start... Theme: {{ themeId }}</p>
+    <p>Waiting for video to start... Theme: {{ currentTheme }}</p>
   </div>
   <div class="m-2" v-if="playerState.videoState === VideoState.Playing">
     <p>(Watch video on screen)</p>
   </div>
-  <div class='polis' data-conversation_id='7zjcnxfbpm'
-       v-show="playerState.videoState === VideoState.EnteringInput"></div>
+
+  <div v-show="playerState.videoState === VideoState.EnteringInput">
+    <div class="polis" v-for="(polisId, themeId) in polisIds" :data-conversation_id="polisId" v-show="currentTheme === themeId"></div>
+  </div>
+
 </template>
 
 <script>
@@ -19,16 +22,32 @@ export default {
   data() {
     return {
       VideoState: VideoState,
-      themeId: ""
+      polisIds: {
+        "migration": "7drxebn42f",
+        "religion": "2nrtajkjsb",
+        "sexuality": "9hv96xk6dj"
+      }
     }
   },
-  watch: {},
-  mounted() {
-    // TODO: Reload every time another theme shows up (-> updating to a new Polis conversation with another ID)
-    let polisEmbedScript = document.createElement('script');
-    polisEmbedScript.setAttribute('src', '/embed.js');
-    document.head.appendChild(polisEmbedScript);
+  watch: {
+    currentTheme(newThemeId, prevThemeId) {
+      console.log("NEW THEME", prevThemeId, "->", newThemeId);
 
+      const prevEmbedScripts = document.querySelectorAll('script[src="/embed.js"]');
+      prevEmbedScripts.forEach(prevEmbedScript => {
+        console.log("Removing prev embed script:", prevEmbedScript);
+        prevEmbedScript.remove();
+      });
+
+      setTimeout(() => {
+        console.log("Loading new embed script...");
+        const polisEmbedScript = document.createElement('script');
+        polisEmbedScript.setAttribute('src', '/embed.js');
+        document.head.appendChild(polisEmbedScript);
+      }, 1000);
+    }
+  },
+  mounted() {
     const roomId = this.$route.params.roomId;
     this.selectRoomById(roomId);
 
@@ -40,7 +59,10 @@ export default {
   computed: {
     ...mapGetters({
       playerState: "videoStateModule/getState"
-    })
+    }),
+    currentTheme() {
+      return this.playerState.currentTheme;
+    }
   },
   methods: {
     ...mapActions({
