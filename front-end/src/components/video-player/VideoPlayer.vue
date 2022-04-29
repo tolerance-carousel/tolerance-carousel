@@ -5,18 +5,32 @@
   </div>
   <div v-if="videoState === VideoState.ThankYou" class="m-2">
     <p><em>Thank you for participating!</em></p>
-    <button @click="onResetShow()">Reset show</button>
+    <button @click="onResetShow()" class="bg-slate-600 hover:bg-slate-700 rounded-full text-white px-3 mt-2">Reset show</button>
   </div>
   <div v-if="videoState === VideoState.Welcome" class="m-2">
-    <!--    TODO: Create QR codes for all available rooms (or create QR codes dynamically) -->
-    <a :href="`/share-perspective/${roomId}`">
-      <img :src="`/qr-codes/${this.playerState.currentTheme}.png`"
-           :alt="`${this.playerState.currentTheme} QR Code`"
-           class="mx-auto">
-    </a>
+    <img :src="`/qr-codes/${roomId}.png`"
+         :alt="`QR Code`"
+         class="mx-auto">
 
     <div class="text-center">
-      <button @click="onStartVideo()">Start the show</button>
+      <a :href="`/share-perspective/${roomId}`" class="text-2xl">
+        <span v-if="roomId==='room_1'">
+          https://edu.nl/xuu33
+        </span>
+        <span v-if="roomId==='room_2'">
+          https://edu.nl/tt3vt
+        </span>
+        <span v-if="roomId==='room_3'">
+          https://edu.nl/acttf
+        </span>
+      </a>
+      <p>
+        https://experience.boasmedia.nl/share-perspective/{{ roomId }}
+      </p>
+      <br/>
+      <button @click="onStartVideo()" class="mt-5 rounded-full bg-slate-600	px-5 py-2 text-white hover:bg-slate-700">
+        Start the show
+      </button>
     </div>
   </div>
   <div v-show="videoState === VideoState.Playing || videoState === VideoState.EnteringInput">
@@ -24,15 +38,14 @@
       <video ref="videoPlayer" class="video-js w-full h-full"></video>
     </div>
 
-    <div v-if="roomId" class="absolute text-white drop-shadow-md top-0">
-      <button @click="onStartVideo()">Play video</button>
+    <div v-if="roomId" class="absolute text-white drop-shadow-md top-0 ml-3 mt-3">
+      <button @click="onStartVideo()" class="bg-slate-600 hover:bg-slate-700 rounded-full px-3 mb-1">Play video</button>
       <br/>
-      <button @click="onResetShow()">Reset show</button>
-      <p>Room: {{ roomId }}</p>
-      <p>PlayerState: {{ playerState }}</p>
+      <button @click="onResetShow()" class="bg-slate-600 hover:bg-slate-700 rounded-full px-3">Reset show</button>
+<!--      <p>Room: {{ roomId }}</p>-->
+<!--      <p>PlayerState: {{ playerState }}</p>-->
 
-      <div v-if="videoState === VideoState.EnteringInput">
-        <p>ENTERING INPUT</p>
+      <div class="text-center mt-10" style="width: 99vw" v-if="videoState === VideoState.EnteringInput">
         <video-player-countdown :video-starts-at="playerState.startsAt"></video-player-countdown>
       </div>
     </div>
@@ -150,7 +163,7 @@ export default {
     },
     onStartVideo() {
       this.updateVideoStateOnServer(VideoState.Playing);
-      if(this.player) {
+      if (this.player) {
         this.player.play();
       }
     },

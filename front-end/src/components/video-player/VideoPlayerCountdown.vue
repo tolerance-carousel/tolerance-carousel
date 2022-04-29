@@ -1,5 +1,12 @@
 <template>
-  <p>Starts in: {{ videoStartsIn }}</p>
+  <div v-if="videoStartsIn && videoStartsIn !== ''">
+    <p class="text-5xl bg-gray-900 py-10 bg-opacity-60">{{ videoStartsIn }}
+      <br/>
+      <span class="text-2xl">
+       before the next video starts...
+      </span>
+    </p>
+  </div>
 </template>
 
 <script>
