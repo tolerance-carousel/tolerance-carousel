@@ -50,9 +50,9 @@ function getNextTheme(currentTheme) {
     if (currentTheme === "migration") {
         return "sexuality";
     }
-    if (currentTheme === "sexuality") {
-        return "religion";
-    }
+    // if (currentTheme === "sexuality") {
+    //     return "religion";
+    // }
     return undefined;
 }
 
@@ -99,6 +99,18 @@ app.get('/update-video-state', (req, res) => {
     res.json(states);
 });
 
+app.get('/reset-video', (req, res) => {
+    const roomId = req.query.roomId;
+    if (!isRoomIdValid(roomId)) {
+        return res.status(400).send({
+            message: 'Invalid room ID'
+        });
+    }
+
+    states[roomId].videoState = VideoState.Welcome.name;
+    states[roomId].currentTheme = themeIds[0];
+});
+
 app.get('/next-video', (req, res) => {
     const roomId = req.query.roomId;
     if (!isRoomIdValid(roomId)) {
@@ -107,8 +119,14 @@ app.get('/next-video', (req, res) => {
         });
     }
 
-    states[roomId].currentTheme = getNextTheme(states[roomId].currentTheme);
-    states[roomId].videoState = VideoState.PlayingVideo.name;
+    const hasNextTheme = getNextTheme(states[roomId].currentTheme);
+    if (hasNextTheme) {
+        states[roomId].currentTheme = hasNextTheme;
+        states[roomId].videoState = VideoState.PlayingVideo.name;
+    } else {
+        states[roomId].currentTheme = themeIds[0];
+        states[roomId].videoState = VideoState.ThankYou.name;
+    }
 
     res.json(states);
 });

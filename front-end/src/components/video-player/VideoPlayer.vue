@@ -3,6 +3,10 @@
   <div v-if="videoState === VideoState.ServerError" class="m-2">
     <p><em>We are experiencing technical difficulties... Our apologies for the inconvenience.</em></p>
   </div>
+  <div v-if="videoState === VideoState.ThankYou" class="m-2">
+    <p><em>Thank you for participating!</em></p>
+    <button @click="onResetShow()">Reset show</button>
+  </div>
   <div v-if="videoState === VideoState.Welcome" class="m-2">
     <!--    TODO: Create QR codes for all available rooms (or create QR codes dynamically) -->
     <a :href="`/share-perspective/${roomId}`">
@@ -22,6 +26,8 @@
 
     <div v-if="roomId" class="absolute text-white drop-shadow-md top-0">
       <button @click="onStartVideo()">Play video</button>
+      <br/>
+      <button @click="onResetShow()">Reset show</button>
       <p>Room: {{ roomId }}</p>
       <p>PlayerState: {{ playerState }}</p>
 
@@ -110,6 +116,7 @@ export default {
     ...mapActions({
       updateVideoStateOnServer: 'videoStateModule/updateVideoStateOnServer',
       updateFromServer: 'videoStateModule/updateFromServer',
+      resetRoomShowOnServer: 'videoStateModule/resetRoomShowOnServer',
     }),
     ...mapMutations({selectRoomById: 'roomModule/selectById'}),
     updateVideoPlayerSource() {
@@ -146,6 +153,9 @@ export default {
       if(this.player) {
         this.player.play();
       }
+    },
+    onResetShow() {
+      this.resetRoomShowOnServer();
     }
   },
   mounted() {

@@ -46,6 +46,23 @@ const videoStateModule = {
                 context.dispatch('updateVideoStateLocally', VideoState.ServerError);
             });
         },
+        resetRoomShowOnServer: async (context: ActionContext<any, any>) => {
+            const roomId: string = context.rootGetters['roomModule/getId'];
+            if (!roomId) {
+                console.log('Did not reset show for room', roomId);
+                return;
+            }
+
+            await context.dispatch('sendHttpRequest', {
+                url: `${import.meta.env.APP_SERVER_URL}/reset-video?roomId=${roomId}`,
+                responseType: 'json'
+            }, {root: true}).then(response => {
+                console.log('Server state:', response);
+            }).catch(error => {
+                console.warn('Could not reset room show on server...', error);
+                context.dispatch('updateVideoStateLocally', VideoState.ServerError);
+            });
+        },
         goToNextVideoOnServer: async (context: ActionContext<any, any>) => {
             const roomId: string = context.rootGetters['roomModule/getId'];
             if (!roomId) {

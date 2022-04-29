@@ -2,6 +2,7 @@ export enum VideoState {
     Welcome = 'welcome',
     Playing = 'playingVideo',
     EnteringInput = 'enteringInput',
+    ThankYou = 'thankYou',
     ServerError = 'serverError',
 }
 

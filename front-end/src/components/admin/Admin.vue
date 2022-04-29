@@ -35,6 +35,7 @@ export default {
     ...mapMutations({selectRoomById: 'roomModule/selectById'}),
     ...mapActions({
       updateVideoStateOnServer: 'videoStateModule/updateVideoStateOnServer',
+      resetRoomShowOnServer: 'videoStateModule/resetRoomShowOnServer',
     }),
     startVideo(roomId: string) {
       this.selectRoomById(roomId);
@@ -42,7 +43,7 @@ export default {
     },
     resetVideo(roomId: string) {
       this.selectRoomById(roomId);
-      this.updateVideoStateOnServer(VideoState.Welcome);
+      this.resetRoomShowOnServer();
     },
   }
 }

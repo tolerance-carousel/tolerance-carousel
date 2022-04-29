@@ -6,9 +6,13 @@
   <div class="m-2" v-if="playerState.videoState === VideoState.Playing">
     <p>(Watch video on screen)</p>
   </div>
+  <div class="m-2" v-if="playerState.videoState === VideoState.ThankYou">
+    <p>Thank you for participating!</p>
+  </div>
 
   <div v-show="playerState.videoState === VideoState.EnteringInput">
-    <div class="polis" v-for="(polisId, themeId) in polisIds" :data-conversation_id="polisId" v-show="currentTheme === themeId"></div>
+    <div class="polis" v-for="(polisId, themeId) in polisIds" :data-conversation_id="polisId"
+         v-show="currentTheme === themeId"></div>
   </div>
 
 </template>
@@ -33,18 +37,7 @@ export default {
     currentTheme(newThemeId, prevThemeId) {
       console.log("NEW THEME", prevThemeId, "->", newThemeId);
 
-      const prevEmbedScripts = document.querySelectorAll('script[src="/embed.js"]');
-      prevEmbedScripts.forEach(prevEmbedScript => {
-        console.log("Removing prev embed script:", prevEmbedScript);
-        prevEmbedScript.remove();
-      });
-
-      setTimeout(() => {
-        console.log("Loading new embed script...");
-        const polisEmbedScript = document.createElement('script');
-        polisEmbedScript.setAttribute('src', '/embed.js');
-        document.head.appendChild(polisEmbedScript);
-      }, 1000);
+      this.reloadPolis();
     }
   },
   mounted() {
@@ -55,6 +48,11 @@ export default {
     setInterval(async () => {
       await this.updateFromServer();
     }, import.meta.env.APP_POLL_SERVER_EVERY_MS);
+
+    this.reloadPolis();
+  },
+  activated() {
+    console.log("Activated!");
   },
   computed: {
     ...mapGetters({
@@ -76,6 +74,20 @@ export default {
     },
     onFinishedVoting() {
       this.goToNextVideoOnServer();
+    },
+    reloadPolis() {
+      const prevEmbedScripts = document.querySelectorAll('script[src="/embed.js"]');
+      prevEmbedScripts.forEach(prevEmbedScript => {
+        console.log("Removing prev embed script:", prevEmbedScript);
+        prevEmbedScript.remove();
+      });
+
+      setTimeout(() => {
+        console.log("Loading new embed script...");
+        const polisEmbedScript = document.createElement('script');
+        polisEmbedScript.setAttribute('src', '/embed.js');
+        document.head.appendChild(polisEmbedScript);
+      }, 1000);
     }
   }
 }
