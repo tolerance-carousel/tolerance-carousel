@@ -41,7 +41,6 @@ export default {
   },
   methods: {
     ...mapActions({
-      updateVideoStateOnServer: 'videoStateModule/updateVideoStateOnServer',
       goToNextVideoOnServer: 'videoStateModule/goToNextVideoOnServer'
     }),
     updateVideoStartsIn() {

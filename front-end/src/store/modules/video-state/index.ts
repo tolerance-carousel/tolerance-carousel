@@ -28,7 +28,7 @@ const videoStateModule = {
             console.log("Updating local video player state...", videoState);
             const playerState: VideoPlayerState = context.state.playerState;
             playerState.videoState = videoState;
-            context.commit('updateLocally', playerState);  
+            context.commit('updateLocally', playerState);
         },
         updateVideoStateOnServer: async (context: ActionContext<any, any>, newState: VideoState) => {
             console.log("Updating video state on server...", newState);
@@ -39,8 +39,9 @@ const videoStateModule = {
                 return;
             }
 
+            const password: string = context.rootGetters['passwordModule/getPassword'];
             await context.dispatch('sendHttpRequest', {
-                url: `${import.meta.env.APP_SERVER_URL}/update-video-state?roomId=${roomId}&state=${newState}`,
+                url: `${import.meta.env.APP_SERVER_URL}/update-video-state?roomId=${roomId}&state=${newState}&pw=${password}`,
                 responseType: 'json'
             }, {root: true}).then(response => {
                 console.log('Server state:', response);
@@ -57,8 +58,9 @@ const videoStateModule = {
                 return;
             }
 
+            const password: string = context.rootGetters['passwordModule/getPassword'];
             await context.dispatch('sendHttpRequest', {
-                url: `${import.meta.env.APP_SERVER_URL}/reset-video?roomId=${roomId}`,
+                url: `${import.meta.env.APP_SERVER_URL}/reset-video?roomId=${roomId}&pw=${password}`,
                 responseType: 'json'
             }, {root: true}).then(response => {
                 console.log('Server state:', response);
@@ -76,8 +78,9 @@ const videoStateModule = {
                 return;
             }
 
+            const password: string = context.rootGetters['passwordModule/getPassword'];
             await context.dispatch('sendHttpRequest', {
-                url: `${import.meta.env.APP_SERVER_URL}/next-video?roomId=${roomId}`,
+                url: `${import.meta.env.APP_SERVER_URL}/next-video?roomId=${roomId}&pw=${password}`,
                 responseType: 'json'
             }, {root: true}).then(response => {
                 console.log('Server state:', response);
@@ -96,7 +99,7 @@ const videoStateModule = {
                 url: `${import.meta.env.APP_SERVER_URL}/get-state?roomId=${roomId}`,
                 responseType: 'json'
             }, {root: true}).then(playerState => {
-                if(!playerState) {
+                if (!playerState) {
                     context.dispatch('updateVideoStateLocally', VideoState.ServerError);
                 } else {
                     context.commit('updateLocally', playerState);

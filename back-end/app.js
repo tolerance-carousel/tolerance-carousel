@@ -31,6 +31,10 @@ const states = {
 
 const themeIds = ["religion", "migration", "sexuality"];
 
+function isPasswordValid(password) {
+    return password === "WeLoveTolerance!";
+}
+
 function isVideoStateValid(state) {
     return state && VideoState.GetAllNames().includes(state);
 }
@@ -83,6 +87,13 @@ app.get('/update-video-state', (req, res) => {
         });
     }
 
+    const pw = req.query.pw;
+    if(!isPasswordValid(pw)) {
+        return res.status(401).send({
+            message: 'Invalid password'
+        });
+    }
+
     const state = req.query.state;
     if (!isVideoStateValid(state)) {
         return res.status(400).send({
@@ -109,9 +120,17 @@ app.get('/reset-video', (req, res) => {
         });
     }
 
+    const pw = req.query.pw;
+    if(!isPasswordValid(pw)) {
+        return res.status(401).send({
+            message: 'Invalid password'
+        });
+    }
+
     states[roomId].videoState = VideoState.Welcome.name;
     states[roomId].currentTheme = themeIds[0];
     states[roomId].startsAt = -1;
+    res.json(states);
 });
 
 app.get('/next-video', (req, res) => {
@@ -119,6 +138,13 @@ app.get('/next-video', (req, res) => {
     if (!isRoomIdValid(roomId)) {
         return res.status(400).send({
             message: 'Invalid room ID'
+        });
+    }
+
+    const pw = req.query.pw;
+    if(!isPasswordValid(pw)) {
+        return res.status(401).send({
+            message: 'Invalid password'
         });
     }
 

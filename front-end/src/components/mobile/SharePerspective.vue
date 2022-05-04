@@ -80,17 +80,9 @@ export default {
   },
   methods: {
     ...mapActions({
-      updateVideoStateOnServer: 'videoStateModule/updateVideoStateOnServer',
       updateFromServer: 'videoStateModule/updateFromServer',
-      goToNextVideoOnServer: 'videoStateModule/goToNextVideoOnServer'
     }),
     ...mapMutations({selectRoomById: 'roomModule/selectById'}),
-    onStartVideo() {
-      this.updateVideoStateOnServer(VideoState.Playing);
-    },
-    onFinishedVoting() {
-      this.goToNextVideoOnServer();
-    },
     reloadPolis() {
       const prevEmbedScripts = document.querySelectorAll('script[src="/embed.js"]');
       prevEmbedScripts.forEach(prevEmbedScript => {

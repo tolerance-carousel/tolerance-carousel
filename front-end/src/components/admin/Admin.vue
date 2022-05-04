@@ -21,30 +21,43 @@
     <div>
       <button @click="resetVideo('room_3')">Reset room_3 video</button>
     </div>
+
+    <hr class="mt-5">
+
+    <PasswordInput :hide-label="true"/>
   </div>
 
 </template>
 
-<script lang="ts">
+<script>
 import {mapActions, mapMutations} from "vuex";
 import {VideoState} from "../../models/video-state";
+import PasswordInput from "./PasswordInput.vue";
 
 export default {
   name: 'Admin',
+  components: {PasswordInput},
+  data() {
+    return {}
+  },
   methods: {
-    ...mapMutations({selectRoomById: 'roomModule/selectById'}),
+    ...mapMutations({
+      selectRoomById: 'roomModule/selectById',
+    }),
     ...mapActions({
       updateVideoStateOnServer: 'videoStateModule/updateVideoStateOnServer',
       resetRoomShowOnServer: 'videoStateModule/resetRoomShowOnServer',
+
     }),
-    startVideo(roomId: string) {
+    startVideo(roomId) {
       this.selectRoomById(roomId);
       this.updateVideoStateOnServer(VideoState.Playing);
     },
-    resetVideo(roomId: string) {
+    resetVideo(roomId) {
       this.selectRoomById(roomId);
       this.resetRoomShowOnServer();
     },
+
   }
 }
 </script>

@@ -22,6 +22,10 @@
       <button @click="onStartVideo()" class="mt-5 rounded-full bg-slate-600	px-5 py-2 text-white hover:bg-slate-700">
         Start the show
       </button>
+
+      <br/>
+
+      <PasswordInput :hide-label="true"/>
     </div>
   </div>
   <div v-show="videoState === VideoState.Playing || videoState === VideoState.EnteringInput">
@@ -35,10 +39,15 @@
 
     <div v-if="roomId" class="absolute text-white drop-shadow-md top-0 ml-3 mt-3">
       <button @click="onStartVideo()"
-              class="bg-slate-600 rounded-full px-3 mb-1 opacity-20 hover:opacity-100 transition-opacity">Play video
+              class="bg-slate-600 rounded-full px-3 mb-1 opacity-0 hover:opacity-100 transition-opacity">Play video
       </button>
       <br/>
-      <button @click="onResetShow()" class="bg-slate-600 opacity-20 hover:opacity-100 transition-opacity rounded-full px-3 mt-1">Reset show</button>
+      <button @click="onResetShow()" class="bg-slate-600 opacity-0 hover:opacity-100 transition-opacity rounded-full px-3 mt-1">Reset show</button>
+
+      <div class="text-black opacity-0 hover:opacity-100">
+        <PasswordInput :hide-label="true"/>
+      </div>
+
       <!--      <p>Room: {{ roomId }}</p>-->
       <!--      <p>PlayerState: {{ playerState }}</p>-->
 
@@ -58,10 +67,11 @@ import {mapActions, mapGetters, mapMutations} from "vuex";
 import VideoPlayerCountdown from "./VideoPlayerCountdown.vue";
 import {VideoState} from "../../models/video-state";
 import SharePerspectiveLink from "./SharePerspectiveLink.vue";
+import PasswordInput from "../admin/PasswordInput.vue";
 
 export default {
   name: 'VideoPlayer',
-  components: {SharePerspectiveLink, VideoPlayerCountdown},
+  components: {PasswordInput, SharePerspectiveLink, VideoPlayerCountdown},
   props: {},
   computed: {
     ...mapGetters({
