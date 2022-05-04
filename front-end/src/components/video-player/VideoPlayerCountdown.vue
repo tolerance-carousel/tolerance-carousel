@@ -1,8 +1,8 @@
 <template>
   <div v-if="videoStartsIn && videoStartsIn !== ''">
-    <p class="text-5xl bg-gray-900 py-10 bg-opacity-60">{{ videoStartsIn }}
-      <br/>
-      <span class="text-2xl">
+    <p :class="[isMobileCounter ? 'font-bold italic' : 'text-5xl bg-gray-900 py-10 bg-opacity-60']">{{ videoStartsIn }}
+      <br v-if="!isMobileCounter"/>
+      <span :class="[isMobileCounter ? '' : 'text-2xl']">
        before the next video starts...
       </span>
     </p>
@@ -16,7 +16,7 @@ import {VideoState} from "../../models/video-state";
 
 export default {
   name: 'VideoPlayerCountdown',
-  props: ['videoStartsAt'],
+  props: ['videoStartsAt', 'isMobileCounter'],
   data() {
     return {
       videoStartsIn: "",
@@ -51,8 +51,10 @@ export default {
       }
 
       const videoStartsInMs = this.videoStartsAt - Date.now();
-      if (videoStartsInMs <= 0 && this.videoState === VideoState.EnteringInput) {
+      if (!this.isMobileCounter && videoStartsInMs <= 0 && this.videoState === VideoState.EnteringInput) {
         this.goToNextVideoOnServer();
+      }
+      if(videoStartsInMs < 0) {
         this.countingDown = false;
       }
       this.videoStartsIn = millisecondsToStr(videoStartsInMs);

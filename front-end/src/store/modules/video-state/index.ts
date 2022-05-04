@@ -14,7 +14,7 @@ const videoStateModule = {
     },
     mutations: {
         updateLocally(state: any, newState: VideoPlayerState) {
-            // console.log("Updating local video player state...", newState);
+            console.log("Updating local state...", newState);
             if (JSON.stringify(state.playerState) == JSON.stringify(newState)) {
                 return;
             }
@@ -25,11 +25,14 @@ const videoStateModule = {
     },
     actions: {
         updateVideoStateLocally: (context: ActionContext<any, any>, videoState: VideoState) => {
+            console.log("Updating local video player state...", videoState);
             const playerState: VideoPlayerState = context.state.playerState;
             playerState.videoState = videoState;
             context.commit('updateLocally', playerState);  
         },
         updateVideoStateOnServer: async (context: ActionContext<any, any>, newState: VideoState) => {
+            console.log("Updating video state on server...", newState);
+
             const roomId: string = context.rootGetters['roomModule/getId'];
             if (!roomId) {
                 console.log('Did not update server state for room', roomId);
@@ -47,6 +50,7 @@ const videoStateModule = {
             });
         },
         resetRoomShowOnServer: async (context: ActionContext<any, any>) => {
+            console.log("Resetting room on server...");
             const roomId: string = context.rootGetters['roomModule/getId'];
             if (!roomId) {
                 console.log('Did not reset show for room', roomId);
@@ -64,6 +68,8 @@ const videoStateModule = {
             });
         },
         goToNextVideoOnServer: async (context: ActionContext<any, any>) => {
+            console.log("Go to next video on server...");
+
             const roomId: string = context.rootGetters['roomModule/getId'];
             if (!roomId) {
                 console.log('Did not update server state for room', roomId);
@@ -81,7 +87,7 @@ const videoStateModule = {
             });
         },
         updateFromServer: async (context: ActionContext<any, any>) => {
-            // console.log("Retrieving video state from server...", import.meta.env);
+            console.log("Retrieving video state from server...", import.meta.env);
             const roomId: string = context.rootGetters['roomModule/getId'];
             if (!roomId) {
                 return;

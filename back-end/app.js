@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const {VideoState} = require("./models/video-state");
 
-const TIME_TO_ENTER_INPUT = 30 * 1000;
+const TIME_TO_ENTER_INPUT = 120 * 1000;
 const app = express();
 
 app.use(morgan('tiny'));
@@ -94,6 +94,8 @@ app.get('/update-video-state', (req, res) => {
 
     if (state === VideoState.EnteringInput.name) {
         states[roomId].startsAt = Date.now() + TIME_TO_ENTER_INPUT;
+    } else {
+        states[roomId].startsAt = -1;
     }
 
     res.json(states);
@@ -109,6 +111,7 @@ app.get('/reset-video', (req, res) => {
 
     states[roomId].videoState = VideoState.Welcome.name;
     states[roomId].currentTheme = themeIds[0];
+    states[roomId].startsAt = -1;
 });
 
 app.get('/next-video', (req, res) => {

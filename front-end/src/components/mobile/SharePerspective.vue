@@ -1,16 +1,30 @@
 <template>
-  <div class="m-2">Room theme: {{ currentTheme }}</div>
+<!--  <div class="m-2">Room theme: {{ currentTheme }}</div>-->
   <div class="m-2" v-if="playerState.videoState === VideoState.Welcome">
-    <p>Waiting for video to start... Theme: {{ currentTheme }}</p>
+    <p class="animate-pulse">Waiting for your host to start the show...</p>
+    <p>Please hold on.</p>
+<!--    Theme: {{ currentTheme }}-->
   </div>
   <div class="m-2" v-if="playerState.videoState === VideoState.Playing">
-    <p>(Watch video on screen)</p>
+    <p>Please watch the video on the screen.</p>
   </div>
-  <div class="m-2" v-if="playerState.videoState === VideoState.ThankYou">
-    <p>Thank you for participating!</p>
+  <div class="m-4" v-if="playerState.videoState === VideoState.ThankYou">
+    <h1 class="text-2xl font-bold">
+      <em>
+        Thank you for participating!
+      </em>
+    </h1>
+    <p class="mt-2">
+      Any questions, thoughts or comments? Feel free to reach out to one of the facilitators.
+    </p>
+    <p class="mt-2">You may now close this window.</p>
   </div>
 
   <div v-show="playerState.videoState === VideoState.EnteringInput">
+    <div class="py-1 px-2">
+      <video-player-countdown :video-starts-at="playerState.startsAt" :is-mobile-counter="true"></video-player-countdown>
+    </div>
+
     <div class="polis" v-for="(polisId, themeId) in polisIds" :data-conversation_id="polisId"
          v-show="currentTheme === themeId"></div>
   </div>
@@ -20,9 +34,11 @@
 <script>
 import {mapActions, mapGetters, mapMutations} from "vuex";
 import {VideoState} from "../../models/video-state";
+import VideoPlayerCountdown from "../video-player/VideoPlayerCountdown.vue";
 
 export default {
   name: "SharePerspective",
+  components: {VideoPlayerCountdown},
   data() {
     return {
       VideoState: VideoState,
