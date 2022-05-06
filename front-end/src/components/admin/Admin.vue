@@ -2,24 +2,37 @@
   <div class="p-4">
     <p class="font-bold mb-3">ADMIN PANEL</p>
     <div>
-      <button class="bg-slate-600 hover:bg-slate-700 rounded-full text-white px-3 " @click="startVideo('room_1')">Start room_1 video</button>
+      <button class="bg-slate-600 hover:bg-slate-700 rounded-full text-white px-3 " @click="startVideo('room_1')">
+        Start room_1 video
+      </button>
     </div>
+
     <div>
-      <button class="bg-slate-600 hover:bg-slate-700 rounded-full text-white px-3 mt-1" @click="resetVideo('room_1')">Reset room_1 video</button>
+      <button class="bg-slate-600 hover:bg-slate-700 rounded-full text-white px-3 mt-1" @click="startVideo('room_2')">
+        Start room_2 video
+      </button>
+    </div>
+
+    <div>
+      <button class="bg-slate-600 hover:bg-slate-700 rounded-full text-white px-3 mt-1" @click="startVideo('room_3')">
+        Start room_3 video
+      </button>
     </div>
 
     <div class="mt-4">
-      <button class="bg-slate-600 hover:bg-slate-700 rounded-full text-white px-3 mt-1" @click="startVideo('room_2')">Start room_2 video</button>
+      <button class="bg-red-800 hover:bg-red-900 rounded-full text-white px-3 mt-1" @click="resetVideo('room_1')">
+        Fully reset room_1
+      </button>
     </div>
     <div>
-      <button class="bg-slate-600 hover:bg-slate-700 rounded-full text-white px-3 mt-1" @click="resetVideo('room_2')">Reset room_2 video</button>
-    </div>
-
-    <div class="mt-4">
-      <button class="bg-slate-600 hover:bg-slate-700 rounded-full text-white px-3 mt-1" @click="startVideo('room_3')">Start room_3 video</button>
+      <button class="bg-red-800 hover:bg-red-900 rounded-full text-white px-3 mt-1" @click="resetVideo('room_2')">
+        Fully reset room_2
+      </button>
     </div>
     <div>
-      <button class="bg-slate-600 hover:bg-slate-700 rounded-full text-white px-3 mt-1" @click="resetVideo('room_3')">Reset room_3 video</button>
+      <button class="bg-red-800 hover:bg-red-900 rounded-full text-white px-3 mt-1" @click="resetVideo('room_3')">
+        Fully reset room_3
+      </button>
     </div>
 
     <hr class="mt-5">
