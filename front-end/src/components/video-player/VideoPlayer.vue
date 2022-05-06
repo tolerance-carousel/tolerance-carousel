@@ -30,11 +30,11 @@
 
       <br/>
 
-      <PasswordInput :hide-label="true"/>
+      <PasswordInput :hide-label="true" @submitted="onStartVideo()"/>
     </div>
   </div>
   <div v-show="videoState === VideoState.Playing || videoState === VideoState.EnteringInput">
-    <div class="absolute bottom-2 left-2 z-40">
+    <div class="absolute bottom-2 left-2 z-40" v-show="videoState === VideoState.Playing">
       <SharePerspectiveLink :room-id="roomId" :show-as-video-overlay="true"/>
     </div>
 
@@ -42,24 +42,27 @@
       <video ref="videoPlayer" class="video-js w-full h-full"></video>
     </div>
 
-    <div v-if="roomId" class="absolute text-white drop-shadow-md top-0 ml-3 mt-3">
-      <button @click="onStartVideo()"
-              class="bg-slate-600 rounded-full px-3 mb-1 opacity-0 hover:opacity-100 transition-opacity">Play video
-      </button>
-      <br/>
-      <button @click="onResetShow()"
-              class="bg-slate-600 opacity-0 hover:opacity-100 transition-opacity rounded-full px-3 mt-1">Reset show
-      </button>
+    <div v-if="roomId" class="absolute text-white drop-shadow-md top-0 mt-3">
+      <div class="ml-3">
+        <button @click="onStartVideo()"
+                class="bg-slate-600 rounded-full px-3 mb-1 opacity-0 hover:opacity-100 transition-opacity">Play video
+        </button>
+        <br/>
+        <button @click="onResetShow()"
+                class="bg-slate-600 opacity-0 hover:opacity-100 transition-opacity rounded-full px-3 mt-1">Reset show
+        </button>
 
-      <div class="text-black opacity-0 hover:opacity-100 transition-opacity">
-        <PasswordInput :hide-label="true"/>
+        <div class="text-black opacity-0 hover:opacity-100 transition-opacity">
+          <PasswordInput :hide-label="true"/>
+        </div>
       </div>
 
       <!--      <p>Room: {{ roomId }}</p>-->
       <!--      <p>PlayerState: {{ playerState }}</p>-->
 
       <div class="text-center mt-10" style="width: 100vw" v-if="videoState === VideoState.EnteringInput">
-        <video-player-countdown :video-starts-at="playerState.startsAt"></video-player-countdown>
+        <video-player-countdown :video-starts-at="playerState.startsAt" :room-id="roomId"
+                                :is-final-counter="isPlayingFinalVideo()"></video-player-countdown>
       </div>
     </div>
 
@@ -184,6 +187,9 @@ export default {
     },
     onResetShow() {
       this.resetRoomShowOnServer();
+    },
+    isPlayingFinalVideo() {
+      return this.playerState.currentTheme === "sexuality";
     }
   },
   mounted() {

@@ -1,7 +1,7 @@
 <template>
   <div>
     <label class="mr-5" v-if="!hideLabel">Password</label>
-    <input type="password" class="border mt-3 px-2" :value="getPassword" @keyup="onPasswordChanged"
+    <input type="password" class="border mt-3 px-2" :value="getPassword" @keyup="onPasswordChanged" @keyup.enter="onSubmit"
            placeholder="Password"/>
   </div>
 </template>
@@ -24,6 +24,9 @@ export default {
     onPasswordChanged(event) {
       const password = event.target.value;
       this.updatePassword(password);
+    },
+    onSubmit() {
+      this.$emit('submitted');
     }
   }
 }

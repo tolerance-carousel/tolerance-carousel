@@ -1,11 +1,15 @@
 <template>
-  <div v-if="videoStartsIn && videoStartsIn !== ''">
-    <p :class="[isMobileCounter ? 'font-bold italic' : 'text-5xl bg-gray-900 py-10 bg-opacity-60']">{{ videoStartsIn }}
-      <br v-if="!isMobileCounter"/>
-      <span :class="[isMobileCounter ? '' : 'text-2xl']">
-       before the next video starts...
-      </span>
+  <div v-if="videoStartsIn && videoStartsIn !== ''"
+       :class="[isMobileCounter ? '' : 'py-10 px-5 bg-slate-800 bg-opacity-60']">
+    <p class="text-5xl" v-if="!isMobileCounter">
+      Please share your perspective using your smartphone
     </p>
+    <br v-if="!isMobileCounter"/>
+    <p :class="[isMobileCounter ? 'font-bold italic' : 'text-2xl mb-5']">
+      {{ videoStartsIn }} before
+      {{ isFinalCounter ? "the show ends..." : "the next video starts..." }}
+    </p>
+    <SharePerspectiveLink :room-id="roomId" v-if="!isMobileCounter"/>
   </div>
 </template>
 
@@ -13,10 +17,12 @@
 import {millisecondsToStr} from "../../utils/time-utils";
 import {mapActions, mapGetters} from "vuex";
 import {VideoState} from "../../models/video-state";
+import SharePerspectiveLink from "./SharePerspectiveLink.vue";
 
 export default {
   name: 'VideoPlayerCountdown',
-  props: ['videoStartsAt', 'isMobileCounter'],
+  props: ['videoStartsAt', 'isMobileCounter', 'roomId', 'isFinalCounter'],
+  components: {SharePerspectiveLink},
   data() {
     return {
       videoStartsIn: "",
@@ -53,7 +59,7 @@ export default {
       if (!this.isMobileCounter && videoStartsInMs <= 0 && this.videoState === VideoState.EnteringInput) {
         this.goToNextVideoOnServer();
       }
-      if(videoStartsInMs < 0) {
+      if (videoStartsInMs < 0) {
         this.countingDown = false;
       }
       this.videoStartsIn = millisecondsToStr(videoStartsInMs);
