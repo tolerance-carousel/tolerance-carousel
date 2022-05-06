@@ -34,7 +34,7 @@
     </div>
   </div>
   <div v-show="videoState === VideoState.Playing || videoState === VideoState.EnteringInput">
-    <div class="absolute bottom-2 left-2 z-40" v-show="videoState === VideoState.Playing">
+    <div class="absolute bottom-10 left-4 z-40" v-show="videoState === VideoState.Playing">
       <SharePerspectiveLink :room-id="roomId" :show-as-video-overlay="true"/>
     </div>
 
@@ -42,12 +42,8 @@
       <video ref="videoPlayer" class="video-js w-full h-full"></video>
     </div>
 
-    <div v-if="roomId" class="absolute text-white drop-shadow-md top-0 mt-3">
+    <div v-if="roomId" class="absolute text-white drop-shadow-md top-0 right-4 mt-3 text-right">
       <div class="ml-3">
-        <button @click="onStartVideo()"
-                class="bg-slate-600 rounded-full px-3 mb-1 opacity-0 hover:opacity-100 transition-opacity">Play video
-        </button>
-        <br/>
         <button @click="onResetShow()"
                 class="bg-slate-600 opacity-0 hover:opacity-100 transition-opacity rounded-full px-3 mt-1">Reset show
         </button>
@@ -126,10 +122,10 @@ export default {
     return {
       VideoState: VideoState,
       player: null,
-      isDevMode: import.meta.env.DEV,
       videoOptions: {
         autoplay: false,
-        controls: false,
+        controls: true,
+        controlBar: {fullscreenToggle: false, pictureInPictureToggle: false},
         loop: false,
         sources: [
           {
