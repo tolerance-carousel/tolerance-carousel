@@ -12,9 +12,14 @@
     <p class="mt-2">
       Any questions, thoughts or comments? Feel free to reach out to one of the facilitators.
     </p>
-    <button @click="onResetShow()" class="bg-slate-600 hover:bg-slate-700 rounded-full text-white px-3 mt-10">Reset
-      show
+    <button @click="onResetShow()"
+            class="bg-slate-600 rounded-full text-white px-3 mt-10 opacity-0 hover:opacity-100 transition-opacity">
+      Reset show
     </button>
+
+    <div class="text-black opacity-0 hover:opacity-100 transition-opacity">
+      <PasswordInput :hide-label="true"/>
+    </div>
   </div>
   <div v-if="videoState === VideoState.Welcome" class="m-2">
     <SharePerspectiveLink :room-id="roomId"/>
@@ -42,9 +47,11 @@
               class="bg-slate-600 rounded-full px-3 mb-1 opacity-0 hover:opacity-100 transition-opacity">Play video
       </button>
       <br/>
-      <button @click="onResetShow()" class="bg-slate-600 opacity-0 hover:opacity-100 transition-opacity rounded-full px-3 mt-1">Reset show</button>
+      <button @click="onResetShow()"
+              class="bg-slate-600 opacity-0 hover:opacity-100 transition-opacity rounded-full px-3 mt-1">Reset show
+      </button>
 
-      <div class="text-black opacity-0 hover:opacity-100">
+      <div class="text-black opacity-0 hover:opacity-100 transition-opacity">
         <PasswordInput :hide-label="true"/>
       </div>
 
@@ -197,7 +204,7 @@ export default {
 </script>
 
 <style>
-  html {
-    overflow-x: hidden;
-  }
+html {
+  overflow-x: hidden;
+}
 </style>
