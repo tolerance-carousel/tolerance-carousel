@@ -17,6 +17,7 @@
       Reset show
     </button>
 
+
     <div class="text-black opacity-0 hover:opacity-100 transition-opacity">
       <PasswordInput :hide-label="true"/>
     </div>
@@ -48,7 +49,7 @@
                 class="bg-slate-600 opacity-0 hover:opacity-100 transition-opacity rounded-full px-3 mt-1">Reset show
         </button>
 
-        <div class="text-black opacity-0 hover:opacity-100 transition-opacity">
+        <div class="text-black hover:opacity-100 transition-opacity" :class="noPasswordEntered ? 'opacity-100' : 'opacity-0'">
           <PasswordInput :hide-label="true"/>
         </div>
       </div>
@@ -83,7 +84,8 @@ export default {
     ...mapGetters({
       playerState: 'videoStateModule/getState',
       roomId: 'roomModule/getId',
-      getVideoPath: 'videoStateModule/getVideoPath'
+      getVideoPath: 'videoStateModule/getVideoPath',
+      noPasswordEntered: 'passwordModule/noPasswordEntered',
     }),
     videoState() {
       return this.playerState.videoState;

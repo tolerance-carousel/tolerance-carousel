@@ -16,6 +16,9 @@ const passwordModule = {
     getters: {
         getPassword: (state): string => {
             return state.password;
+        },
+        noPasswordEntered: (state): boolean => {
+            return !state.password || state.password === "";
         }
     },
 };
