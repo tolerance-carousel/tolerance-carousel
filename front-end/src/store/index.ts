@@ -11,13 +11,16 @@ interface State {
 const store = createStore<State>({
     modules: {videoStateModule, roomModule, passwordModule},
     actions: {
-        sendHttpRequest: async (context, {url, responseType}) => {
+        sendHttpRequest: async ({commit, dispatch, state}, {url, responseType, alertForIncorrectPassword = true}) => {
             return new Promise(function (resolve, reject) {
                 const xhr = new XMLHttpRequest();
                 xhr.responseType = responseType;
                 xhr.onload = async (event) => {
                     if(xhr.status === 401) {
-                        alert("Invalid password");
+                        if(alertForIncorrectPassword) {
+                            alert("Invalid password");
+                        }
+
                         return reject({
                             status: xhr.status,
                             statusText: xhr.statusText,

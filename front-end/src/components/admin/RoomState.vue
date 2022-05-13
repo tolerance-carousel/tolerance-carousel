@@ -5,7 +5,7 @@
 
 <script>
 export default {
-  name: 'AdminRoomState',
+  name: 'RoomState',
   props: ['roomState']
 }
 </script>

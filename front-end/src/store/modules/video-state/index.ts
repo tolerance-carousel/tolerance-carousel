@@ -79,15 +79,14 @@ const videoStateModule = {
             }
 
             const password: string = context.rootGetters['passwordModule/getPassword'];
-            await context.dispatch('sendHttpRequest', {
+            if(!password || password === "" ){
+                return Promise.reject('No password entered');
+            }
+            return context.dispatch('sendHttpRequest', {
                 url: `${import.meta.env.APP_SERVER_URL}/next-video?roomId=${roomId}&pw=${password}`,
-                responseType: 'json'
-            }, {root: true}).then(response => {
-                console.log('Server state:', response);
-            }).catch(error => {
-                console.warn('Could not update video state on server...', error);
-                context.dispatch('updateVideoStateLocally', VideoState.ServerError);
-            });
+                responseType: 'json',
+                alertForIncorrectPassword: false
+            }, {root: true});
         },
         updateFromServer: async (context: ActionContext<any, any>) => {
             console.log("Retrieving video state from server...", import.meta.env);

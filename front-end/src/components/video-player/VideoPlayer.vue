@@ -49,6 +49,7 @@
                 class="bg-slate-600 opacity-0 hover:opacity-100 transition-opacity rounded-full px-3 mt-1">Reset show
         </button>
 
+        <!-- TODO: Add red highlight if password is not filled in -->
         <div class="text-black hover:opacity-100 transition-opacity" :class="noPasswordEntered ? 'opacity-100' : 'opacity-0'">
           <PasswordInput :hide-label="true"/>
         </div>
