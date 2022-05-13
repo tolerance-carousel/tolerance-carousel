@@ -108,6 +108,15 @@ const videoStateModule = {
                 console.warn('Could not retrieve state from server...', error);
                 context.dispatch('updateVideoStateLocally', VideoState.ServerError);
             });
+        },
+        getRoomStatesFromServer: async (context: ActionContext<any, any>) => {
+            console.log("Retrieving room states from server...", import.meta.env);
+            return await context.dispatch('sendHttpRequest', {
+                url: `${import.meta.env.APP_SERVER_URL}/get-states`,
+                responseType: 'json'
+            }, {root: true}).catch(error => {
+                console.warn('Could not retrieve states from server...', error);
+            });
         }
     },
     getters: {
