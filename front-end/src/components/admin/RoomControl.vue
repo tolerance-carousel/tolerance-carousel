@@ -9,7 +9,7 @@
     <br/>
 
     <button class="bg-red-800 hover:bg-red-900 rounded-full text-white px-3 mt-1" @click="resetVideo(roomId)">
-      Fully reset {{ roomId }}
+      Volledige reset van {{ roomId }} naar welkomstscherm
     </button>
   </div>
 </template>

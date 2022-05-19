@@ -1,20 +1,20 @@
 <template>
   <div v-if="!roomId">Error: Room ID is incorrect.</div>
   <div v-if="videoState === VideoState.ServerError" class="m-2">
-    <p><em>We are experiencing technical difficulties... Our apologies for the inconvenience.</em></p>
+    <p><em>Er lijken technische problemen te zijn... Excuses voor het ongemak.</em></p>
   </div>
   <div v-if="videoState === VideoState.ThankYou" class="m-4">
     <h1 class="text-2xl font-bold">
       <em>
-        Thank you for participating!
+        Dank je wel voor het meedoen!
       </em>
     </h1>
     <p class="mt-2">
-      Any questions, thoughts or comments? Feel free to reach out to one of the facilitators.
+      Vragen, gedachten of opmerkingen? Voel je vrij om iemand in je omgeving of een van de facilitators te benaderen.
     </p>
     <button @click="onResetShow()"
-            class="bg-slate-600 rounded-full text-white px-3 mt-10 opacity-0 hover:opacity-100 transition-opacity">
-      Reset show
+            class="bg-red-800 rounded-full text-white px-3 mt-10 opacity-0 hover:opacity-100 transition-opacity">
+      Reset naar welkomstscherm
     </button>
 
 
@@ -26,7 +26,7 @@
     <SharePerspectiveLink :room-id="roomId"/>
     <div class="text-center">
       <button @click="onStartVideo()" class="mt-5 rounded-full bg-slate-600	px-5 py-2 text-white hover:bg-slate-700">
-        Start the show
+        Start de show
       </button>
 
       <br/>
@@ -46,7 +46,7 @@
     <div v-if="roomId" class="absolute text-white drop-shadow-md top-0 right-4 mt-3 text-right">
       <div class="ml-3">
         <button @click="onResetShow()"
-                class="bg-slate-600 opacity-0 hover:opacity-100 transition-opacity rounded-full px-3 mt-1">Reset show
+                class="bg-red-800 opacity-0 hover:opacity-100 transition-opacity rounded-full px-3 mt-1">Volledige reset naar welkomstscherm
         </button>
 
         <!-- TODO: Add red highlight if password is not filled in -->

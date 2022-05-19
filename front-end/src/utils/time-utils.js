@@ -7,11 +7,11 @@ export function millisecondsToStr(milliseconds) {
     const seconds = Math.floor(milliseconds / 1000);
 
     const levels = [
-        [Math.floor(seconds / 31536000), 'years'],
-        [Math.floor((seconds % 31536000) / 86400), 'days'],
-        [Math.floor(((seconds % 31536000) % 86400) / 3600), 'hours'],
-        [Math.floor((((seconds % 31536000) % 86400) % 3600) / 60), 'minutes'],
-        [(((seconds % 31536000) % 86400) % 3600) % 60, 'seconds'],
+        [Math.floor(seconds / 31536000), 'jaar'],
+        [Math.floor((seconds % 31536000) / 86400), 'dagen'],
+        [Math.floor(((seconds % 31536000) % 86400) / 3600), 'uur'],
+        [Math.floor((((seconds % 31536000) % 86400) % 3600) / 60), 'minuten'],
+        [(((seconds % 31536000) % 86400) % 3600) % 60, 'seconden'],
     ];
     let returnText = '';
 
@@ -19,6 +19,6 @@ export function millisecondsToStr(milliseconds) {
         if (levels[i][0] === 0) continue;
         returnText += ' ' + levels[i][0] + ' ' + (levels[i][0] === 1 ? levels[i][1].substr(0, levels[i][1].length - 1) : levels[i][1]);
     }
-    ;
+
     return returnText.trim();
 }

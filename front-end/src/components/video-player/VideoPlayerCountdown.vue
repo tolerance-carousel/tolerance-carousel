@@ -2,12 +2,12 @@
   <div v-if="videoStartsIn && videoStartsIn !== ''"
        :class="[isMobileCounter ? '' : 'py-10 px-5 bg-black bg-opacity-60']">
     <p class="text-5xl" v-if="!isMobileCounter">
-      Please share your perspective using your smartphone
+      Deel je perspectief met je smartphone
     </p>
     <br v-if="!isMobileCounter"/>
     <p :class="[isMobileCounter ? 'font-bold italic' : 'text-2xl mb-5']">
-      {{ videoStartsIn }} before
-      {{ isFinalCounter ? "the show ends..." : "the next video starts..." }}
+      {{ videoStartsIn }} voordat
+      {{ isFinalCounter ? "de show eindigt..." : "de volgende video begint..." }}
     </p>
     <SharePerspectiveLink :room-id="roomId" v-if="!isMobileCounter"/>
   </div>
