@@ -23,3 +23,4 @@ dist-ssr
 *.sln
 *.sw?
 front-end/.env.production
+*.m4v
