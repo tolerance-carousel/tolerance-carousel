@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const {VideoState} = require("./models/video-state");
 
-const TIME_TO_ENTER_INPUT = 120 * 1000;
+const TIME_TO_ENTER_INPUT = 60 * 4 * 1000;
 const app = express();
 
 app.use(morgan('tiny'));
