@@ -58,13 +58,22 @@
     <div v-if="roomId" class="absolute text-white drop-shadow-md top-0 right-4 mt-3 text-right">
       <div class="ml-3">
         <button @click="onResetShow()"
-                class="bg-red-800 opacity-0 hover:opacity-100 transition-opacity rounded-full px-3 mt-1">Volledige reset naar welkomstscherm
+                class="bg-red-800 opacity-0 hover:opacity-100 transition-opacity rounded-full px-3 mb-4">Volledige reset
+          naar welkomstscherm
         </button>
 
         <!-- TODO: Add red highlight if password is not filled in -->
-        <div class="text-black hover:opacity-100 transition-opacity" :class="noPasswordEntered ? 'opacity-100' : 'opacity-0'">
+        <div class="text-black hover:opacity-100 transition-opacity"
+             :class="noPasswordEntered ? 'opacity-100' : 'opacity-0'">
           <PasswordInput :hide-label="true"/>
         </div>
+
+        <button @click="onNextVideo()"
+                class="bg-slate-600 opacity-0 hover:opacity-100 transition-opacity rounded-full px-3 mt-2">Start
+          volgende video
+        </button>
+
+
       </div>
 
       <!--      <p>Room: {{ roomId }}</p>-->
@@ -159,6 +168,7 @@ export default {
       updateVideoStateOnServer: 'videoStateModule/updateVideoStateOnServer',
       updateFromServer: 'videoStateModule/updateFromServer',
       resetRoomShowOnServer: 'videoStateModule/resetRoomShowOnServer',
+      goToNextVideoOnServer: 'videoStateModule/goToNextVideoOnServer',
     }),
     ...mapMutations({selectRoomById: 'roomModule/selectById'}),
     updateVideoPlayerSource() {
@@ -198,6 +208,9 @@ export default {
     },
     onResetShow() {
       this.resetRoomShowOnServer();
+    },
+    onNextVideo() {
+      this.goToNextVideoOnServer();
     },
     isPlayingFinalVideo() {
       return this.playerState.currentTheme === "sexuality";
