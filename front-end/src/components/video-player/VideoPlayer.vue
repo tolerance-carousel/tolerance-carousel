@@ -3,36 +3,8 @@
   <div v-if="videoState === VideoState.ServerError" class="m-2">
     <p><em>Er lijken technische problemen te zijn... Excuses voor het ongemak.</em></p>
   </div>
-  <div v-if="videoState === VideoState.ThankYou" class="m-4">
-    <h1 class="text-2xl font-bold">
-      <em>
-        Dank je wel voor het meedoen!
-      </em>
-    </h1>
-    <p class="mt-2">
-      Vragen, gedachten of opmerkingen? Voel je vrij om iemand in je omgeving of een van de facilitators te benaderen.
-    </p>
-    <br/>
-    <h1 class="font-bold text-lg">
-      Partners
-    </h1>
-    <p class="mb-4">
-      <em>Samenwerking van...</em>
-    </p>
-    <p>
-      <img src="/logos/logo-hua.svg" alt="Logo van Het Utrechts Archief" class="w-28 inline-block mr-4">
-      <img src="/logos/logo-uu.svg" alt="Logo van Universiteit Utrecht" class="w-28 inline-block mr-4">
-      <img src="/logos/logo-utrecht.svg" alt="Logo van Gemeente Utrecht" class="w-28 inline-block mr-4">
-    </p>
-    <button @click="onResetShow()"
-            class="bg-red-800 rounded-full text-white px-3 mt-10 opacity-0 hover:opacity-100 transition-opacity">
-      Reset naar welkomstscherm
-    </button>
-
-
-    <div class="text-black opacity-0 hover:opacity-100 transition-opacity">
-      <PasswordInput :hide-label="true"/>
-    </div>
+  <div v-if="videoState === VideoState.ThankYou">
+    <ThankYou/>
   </div>
   <div v-if="videoState === VideoState.Welcome" class="m-2">
     <SharePerspectiveLink :room-id="roomId"/>
@@ -83,7 +55,8 @@
     </div>
 
 
-    <div class="text-center text-white w-[100vw] h-[100vh] absolute top-0 left-0 bg-black bg-opacity-60 pt-10" v-if="roomId && videoState === VideoState.EnteringInput">
+    <div class="text-center text-white w-[100vw] h-[100vh] absolute top-0 left-0 bg-black bg-opacity-60 pt-10"
+         v-if="roomId && videoState === VideoState.EnteringInput">
       <video-player-countdown :video-starts-at="playerState.startsAt" :room-id="roomId"
                               :is-final-counter="isPlayingFinalVideo()"></video-player-countdown>
     </div>
@@ -100,10 +73,11 @@ import VideoPlayerCountdown from "./VideoPlayerCountdown.vue";
 import {VideoState} from "../../models/video-state";
 import SharePerspectiveLink from "./SharePerspectiveLink.vue";
 import PasswordInput from "../admin/PasswordInput.vue";
+import ThankYou from "./ThankYou.vue";
 
 export default {
   name: 'VideoPlayer',
-  components: {PasswordInput, SharePerspectiveLink, VideoPlayerCountdown},
+  components: {ThankYou, PasswordInput, SharePerspectiveLink, VideoPlayerCountdown},
   props: {},
   computed: {
     ...mapGetters({
