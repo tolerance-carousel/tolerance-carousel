@@ -5,10 +5,9 @@
 
     <hr class="my-5">
 
-    <!-- TODO: Add buttons to reset room to specific video / state -->
-    <RoomControl room-id="room_1" title="Room 1" :start-video="startVideo" :reset-video="resetVideo" :room-states="roomStates" />
-    <RoomControl room-id="room_2" title="Room 2" :start-video="startVideo" :reset-video="resetVideo" :room-states="roomStates" />
-    <RoomControl room-id="room_3" title="Room 3" :start-video="startVideo" :reset-video="resetVideo" :room-states="roomStates" />
+    <RoomControl room-id="room_1" title="Room 1" :start-video="startVideo" :reset-video="resetVideo" :next-video="nextVideo" :room-states="roomStates" />
+    <RoomControl room-id="room_2" title="Room 2" :start-video="startVideo" :reset-video="resetVideo" :next-video="nextVideo" :room-states="roomStates" />
+    <RoomControl room-id="room_3" title="Room 3" :start-video="startVideo" :reset-video="resetVideo" :next-video="nextVideo" :room-states="roomStates" />
 
   </div>
 
@@ -36,6 +35,7 @@ export default {
       updateVideoStateOnServer: 'videoStateModule/updateVideoStateOnServer',
       resetRoomShowOnServer: 'videoStateModule/resetRoomShowOnServer',
       getRoomStatesFromServer: 'videoStateModule/getRoomStatesFromServer',
+      goToNextVideoOnServer: 'videoStateModule/goToNextVideoOnServer'
     }),
     startVideo(roomId) {
       this.selectRoomById(roomId);
@@ -45,6 +45,10 @@ export default {
       this.selectRoomById(roomId);
       this.resetRoomShowOnServer();
     },
+    nextVideo(roomId) {
+      this.selectRoomById(roomId);
+      this.goToNextVideoOnServer();
+    }
 
   },
   mounted() {

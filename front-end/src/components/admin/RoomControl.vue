@@ -2,8 +2,14 @@
   <div class="mb-8">
     <h1 class="text-2xl font-bold">{{ title }}</h1>
     <RoomState v-if="roomStates && roomId in roomStates" :room-state="roomStates[roomId]"/>
-    <button class="bg-slate-600 hover:bg-slate-700 rounded-full text-white px-3 " @click="startVideo(roomId)">
-      Start {{ roomId }} video
+    <button class="bg-slate-600 hover:bg-slate-700 rounded-full text-white px-3 mt-2" @click="startVideo(roomId)">
+      Start huidige {{ roomId }} video
+    </button>
+
+    <br/>
+
+    <button class="bg-slate-600 hover:bg-slate-700 rounded-full text-white px-3 mt-1" @click="nextVideo(roomId)">
+      Ga naar volgende video van {{ roomId }}
     </button>
 
     <br/>
@@ -19,7 +25,7 @@ import RoomState from "./RoomState.vue";
 
 export default {
   name: "RoomControl",
-  props: ["roomStates", "resetVideo", "startVideo", "roomId", "title"],
+  props: ["roomStates", "resetVideo", "startVideo", "nextVideo", "roomId", "title"],
   components: {RoomState}
 }
 </script>
