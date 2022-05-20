@@ -1,6 +1,6 @@
 <template>
   <div v-if="videoStartsIn && videoStartsIn !== ''"
-       :class="[isMobileCounter ? '' : 'py-10 px-5 bg-black bg-opacity-60']">
+       :class="[isMobileCounter ? '' : 'px-5']">
     <p class="text-5xl" v-if="!isMobileCounter">
       Deel je perspectief met je smartphone
     </p>

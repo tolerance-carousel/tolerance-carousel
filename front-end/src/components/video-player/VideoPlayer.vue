@@ -55,7 +55,7 @@
       <video ref="videoPlayer" class="video-js w-full h-full"></video>
     </div>
 
-    <div v-if="roomId" class="absolute text-white drop-shadow-md top-0 right-4 mt-3 text-right">
+    <div v-if="roomId" class="absolute text-white drop-shadow-md top-0 right-4 mt-3 z-40 text-right">
       <div class="ml-3">
         <button @click="onResetShow()"
                 class="bg-red-800 opacity-0 hover:opacity-100 transition-opacity rounded-full px-3 mb-4">Volledige reset
@@ -79,10 +79,13 @@
       <!--      <p>Room: {{ roomId }}</p>-->
       <!--      <p>PlayerState: {{ playerState }}</p>-->
 
-      <div class="text-center mt-10" style="width: 100vw" v-if="videoState === VideoState.EnteringInput">
-        <video-player-countdown :video-starts-at="playerState.startsAt" :room-id="roomId"
-                                :is-final-counter="isPlayingFinalVideo()"></video-player-countdown>
-      </div>
+
+    </div>
+
+
+    <div class="text-center text-white w-[100vw] h-[100vh] absolute top-0 left-0 bg-black bg-opacity-60 pt-10" v-if="roomId && videoState === VideoState.EnteringInput">
+      <video-player-countdown :video-starts-at="playerState.startsAt" :room-id="roomId"
+                              :is-final-counter="isPlayingFinalVideo()"></video-player-countdown>
     </div>
 
 
@@ -234,7 +237,7 @@ export default {
 </script>
 
 <style>
-html {
-  overflow-x: hidden;
-}
+/*.vjs-control-bar, .vjs-big-play-button {*/
+/*  z-index: 999;*/
+/*}*/
 </style>
