@@ -12,6 +12,18 @@
     <p class="mt-2">
       Vragen, gedachten of opmerkingen? Voel je vrij om iemand in je omgeving of een van de facilitators te benaderen.
     </p>
+    <br/>
+    <h1 class="font-bold text-lg">
+      Partners
+    </h1>
+    <p class="mb-4">
+      <em>Samenwerking van...</em>
+    </p>
+    <p>
+      <img src="/logos/logo-hua.svg" alt="Logo van Het Utrechts Archief" class="w-28 inline-block mr-4">
+      <img src="/logos/logo-uu.svg" alt="Logo van Universiteit Utrecht" class="w-28 inline-block mr-4">
+      <img src="/logos/logo-utrecht.svg" alt="Logo van Gemeente Utrecht" class="w-28 inline-block mr-4">
+    </p>
     <button @click="onResetShow()"
             class="bg-red-800 rounded-full text-white px-3 mt-10 opacity-0 hover:opacity-100 transition-opacity">
       Reset naar welkomstscherm
