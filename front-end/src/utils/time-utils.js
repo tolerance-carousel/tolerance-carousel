@@ -17,7 +17,18 @@ export function millisecondsToStr(milliseconds) {
 
     for (let i = 0, max = levels.length; i < max; i++) {
         if (levels[i][0] === 0) continue;
-        returnText += ' ' + levels[i][0] + ' ' + (levels[i][0] === 1 ? levels[i][1].substr(0, levels[i][1].length - 1) : levels[i][1]);
+        if(levels[i][0] === 1) {
+            if(i === 1) {
+                levels[i][1] = 'dag';
+            }
+            if(i === 3) {
+                levels[i][1] = 'minuut';
+            }
+            if(i === 4) {
+                levels[i][1] = 'seconde';
+            }
+        }
+        returnText += ' ' + levels[i][0] + ' ' + levels[i][1];
     }
 
     return returnText.trim();
