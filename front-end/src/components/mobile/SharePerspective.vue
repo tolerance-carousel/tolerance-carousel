@@ -43,9 +43,9 @@ export default {
     return {
       VideoState: VideoState,
       polisIds: {
-        "migration": "7drxebn42f",
-        "religion": "2nrtajkjsb",
-        "sexuality": "9hv96xk6dj"
+        "religion": "8fvwmjnfxe",
+        "migration": "49v4meperm",
+        "sexuality": "2jic4d2hbr"
       }
     }
   },
