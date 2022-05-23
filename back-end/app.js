@@ -88,7 +88,7 @@ app.get('/update-video-state', (req, res) => {
     }
 
     const pw = req.query.pw;
-    if(!isPasswordValid(pw)) {
+    if (!isPasswordValid(pw)) {
         return res.status(401).send({
             message: 'Invalid password'
         });
@@ -105,6 +105,11 @@ app.get('/update-video-state', (req, res) => {
 
     if (state === VideoState.EnteringInput.name) {
         states[roomId].startsAt = Date.now() + TIME_TO_ENTER_INPUT;
+
+        if (states[roomId].currentTheme === "religion") {
+            // Add one minute for the first round
+            states[roomId].startsAt += 60 * 1000;
+        }
     } else {
         states[roomId].startsAt = -1;
     }
@@ -121,7 +126,7 @@ app.get('/reset-video', (req, res) => {
     }
 
     const pw = req.query.pw;
-    if(!isPasswordValid(pw)) {
+    if (!isPasswordValid(pw)) {
         return res.status(401).send({
             message: 'Invalid password'
         });
@@ -142,7 +147,7 @@ app.get('/next-video', (req, res) => {
     }
 
     const pw = req.query.pw;
-    if(!isPasswordValid(pw)) {
+    if (!isPasswordValid(pw)) {
         return res.status(401).send({
             message: 'Invalid password'
         });
