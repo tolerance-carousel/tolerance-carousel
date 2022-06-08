@@ -42,11 +42,7 @@ export default {
   data() {
     return {
       VideoState: VideoState,
-      polisIds: {
-        "religion": "8fvwmjnfxe",
-        "migration": "49v4meperm",
-        "sexuality": "2jic4d2hbr"
-      }
+      polisIds: {}
     }
   },
   watch: {
@@ -57,15 +53,7 @@ export default {
     }
   },
   mounted() {
-    const roomId = this.$route.params.roomId;
-    this.selectRoomById(roomId);
-
-    // TODO: Wait for response before sending new request.
-    setInterval(async () => {
-      await this.updateFromServer();
-    }, import.meta.env.APP_POLL_SERVER_EVERY_MS);
-
-    this.reloadPolis();
+    this.init();
   },
   activated() {
     console.log("Activated!");
@@ -81,8 +69,21 @@ export default {
   methods: {
     ...mapActions({
       updateFromServer: 'videoStateModule/updateFromServer',
+      getPolisIdsFromServer: 'polisModule/getPolisIdsFromServer',
     }),
     ...mapMutations({selectRoomById: 'roomModule/selectById'}),
+    async init() {
+      const roomId = this.$route.params.roomId;
+      this.selectRoomById(roomId);
+
+      // TODO: Wait for response before sending new request.
+      setInterval(async () => {
+        await this.updateFromServer();
+      }, import.meta.env.APP_POLL_SERVER_EVERY_MS);
+
+      this.polisIds = await this.getPolisIdsFromServer();
+      this.reloadPolis();
+    },
     reloadPolis() {
       const prevEmbedScripts = document.querySelectorAll('script[src="/embed.js"]');
       prevEmbedScripts.forEach(prevEmbedScript => {
