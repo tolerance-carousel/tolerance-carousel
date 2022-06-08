@@ -29,6 +29,12 @@ const states = {
     }
 };
 
+let polisIds = {
+    "religion": "8fvwmjnfxe",
+    "migration": "49v4meperm",
+    "sexuality": "2jic4d2hbr"
+}
+
 const themeIds = ["religion", "migration", "sexuality"];
 
 function isPasswordValid(password) {
@@ -62,6 +68,29 @@ function getNextTheme(currentTheme) {
 
 app.get('/', (req, res) => {
     res.json(states);
+});
+
+app.get('/get-polis-ids', (req, res) => {
+    res.json(polisIds);
+});
+
+app.get('/update-polis-ids', (req, res) => {
+    const pw = req.query.pw;
+    if (!isPasswordValid(pw)) {
+        return res.status(401).send({
+            message: 'Invalid password'
+        });
+    }
+    try {
+        const updatedIds = JSON.parse(req.query.updatedIds);
+        polisIds = updatedIds;
+    } catch (e) {
+        return res.status(500).send({
+            message: 'Could not parse passed IDs'
+        });
+    }
+
+    res.json(polisIds);
 });
 
 app.get('/get-state', (req, res) => {

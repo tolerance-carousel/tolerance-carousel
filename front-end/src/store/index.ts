@@ -1,15 +1,16 @@
-import {createStore} from 'vuex';
+import {ActionContext, createStore} from 'vuex';
 import videoStateModule from './modules/video-state';
 import {ThemeId} from '../models/theme-id';
 import roomModule from "./modules/room";
 import passwordModule from "./modules/password";
+import polisModule from "./modules/polis";
 
 interface State {
     themeId: ThemeId | null
 }
 
 const store = createStore<State>({
-    modules: {videoStateModule, roomModule, passwordModule},
+    modules: {videoStateModule, roomModule, passwordModule, polisModule},
     actions: {
         sendHttpRequest: async ({commit, dispatch, state}, {url, responseType, alertForIncorrectPassword = true}) => {
             return new Promise(function (resolve, reject) {

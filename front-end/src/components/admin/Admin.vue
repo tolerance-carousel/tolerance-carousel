@@ -5,6 +5,7 @@
 
     <hr class="my-5">
 
+    <PolisIdsControl></PolisIdsControl>
     <RoomControl room-id="room_1" title="Room 1" :start-video="startVideo" :reset-video="resetVideo" :next-video="nextVideo" :room-states="roomStates" />
     <RoomControl room-id="room_2" title="Room 2" :start-video="startVideo" :reset-video="resetVideo" :next-video="nextVideo" :room-states="roomStates" />
     <RoomControl room-id="room_3" title="Room 3" :start-video="startVideo" :reset-video="resetVideo" :next-video="nextVideo" :room-states="roomStates" />
@@ -18,13 +19,14 @@ import {mapActions, mapMutations} from "vuex";
 import {VideoState} from "../../models/video-state";
 import PasswordInput from "./PasswordInput.vue";
 import RoomControl from "./RoomControl.vue";
+import PolisIdsControl from "./PolisIdsControl.vue";
 
 export default {
   name: 'Admin',
-  components: {RoomControl, PasswordInput},
+  components: {PolisIdsControl, RoomControl, PasswordInput},
   data() {
     return {
-      roomStates: null
+      roomStates: null,
     }
   },
   methods: {
@@ -35,7 +37,7 @@ export default {
       updateVideoStateOnServer: 'videoStateModule/updateVideoStateOnServer',
       resetRoomShowOnServer: 'videoStateModule/resetRoomShowOnServer',
       getRoomStatesFromServer: 'videoStateModule/getRoomStatesFromServer',
-      goToNextVideoOnServer: 'videoStateModule/goToNextVideoOnServer'
+      goToNextVideoOnServer: 'videoStateModule/goToNextVideoOnServer',
     }),
     startVideo(roomId) {
       this.selectRoomById(roomId);
@@ -48,8 +50,7 @@ export default {
     nextVideo(roomId) {
       this.selectRoomById(roomId);
       this.goToNextVideoOnServer();
-    }
-
+    },
   },
   mounted() {
     setInterval(async() => {
