@@ -123,7 +123,17 @@ const videoStateModule = {
             return state.playerState;
         },
         getVideoPath: (state: any) => {
-            return `/videos/${state.playerState.currentTheme}/${state.playerState.currentTheme}.m4v`;
+            const currentTheme = state.playerState.currentTheme;
+            if(currentTheme === 'religion') {
+                return '346095107';
+            } else if(currentTheme === 'migration') {
+                return '73006976';
+            } else if (currentTheme === 'sexuality') {
+                return '17101589';
+            } else {
+                console.warn("Could not find video for theme:", currentTheme)
+                return null;
+            }
         }
     },
 };

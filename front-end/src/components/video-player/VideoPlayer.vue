@@ -23,8 +23,9 @@
       <SharePerspectiveLink :room-id="roomId" :show-as-video-overlay="true"/>
     </div>
 
-    <div class="h-screen w-screen bg-gray-800">
-      <video ref="videoPlayer" class="video-js w-full h-full"></video>
+    <div class="h-screen w-screen bg-black">
+      <vimeo-player ref="player" :video-id="videoId" @ready="onVideoReady" :autoplay="true" @ended="onVideoFinished"
+                    v-if="videoState === VideoState.Playing"/>
     </div>
 
     <div v-if="roomId" class="absolute text-white drop-shadow-md top-0 right-4 mt-3 z-40 text-right">
@@ -45,13 +46,10 @@
           volgende video
         </button>
 
-
       </div>
 
       <!--      <p>Room: {{ roomId }}</p>-->
       <!--      <p>PlayerState: {{ playerState }}</p>-->
-
-
     </div>
 
 
@@ -67,17 +65,17 @@
 </template>
 
 <script>
-import videojs from "video.js";
 import {mapActions, mapGetters, mapMutations} from "vuex";
 import VideoPlayerCountdown from "./VideoPlayerCountdown.vue";
 import {VideoState} from "../../models/video-state";
 import SharePerspectiveLink from "./SharePerspectiveLink.vue";
 import PasswordInput from "../admin/PasswordInput.vue";
 import ThankYou from "./ThankYou.vue";
+import {vueVimeoPlayer} from 'vue-vimeo-player'
 
 export default {
   name: 'VideoPlayer',
-  components: {ThankYou, PasswordInput, SharePerspectiveLink, VideoPlayerCountdown},
+  components: {ThankYou, PasswordInput, SharePerspectiveLink, VideoPlayerCountdown, vueVimeoPlayer},
   props: {},
   computed: {
     ...mapGetters({
@@ -103,17 +101,17 @@ export default {
 
           this.updateVideoPlayerSource();
 
-          if (newState.videoState === VideoState.Playing) {
-            this.player.play();
-          }
+          // if (newState.videoState === VideoState.Playing) {
+          //   this.$refs.player.play();
+          // }
 
           if (newState.videoState === VideoState.EnteringInput) {
-            this.player.pause();
+            this.pauseVideo();
           }
 
           if (newState.videoState === VideoState.Welcome) {
-            this.player.pause();
-            this.player.currentTime(0);
+            this.pauseVideo();
+            // this.$refs.player.currentTime(0);
           }
         }
       }
@@ -122,24 +120,25 @@ export default {
   data() {
     return {
       VideoState: VideoState,
-      player: null,
-      videoOptions: {
-        autoplay: false,
-        controls: true,
-        controlBar: {fullscreenToggle: false, pictureInPictureToggle: false},
-        loop: false,
-        sources: [
-          {
-            src: null,
-            type: "video/mp4"
-          }
-        ]
-      },
+      videoId: '346095107',
     }
   },
   methods: {
+    onVideoReady() {
+      this.updateVideoPlayerSource();
+    },
     onVideoFinished() {
       this.updateVideoStateOnServer(VideoState.EnteringInput);
+    },
+    pauseVideo() {
+      if (this.$refs.player) {
+        this.$refs.player.pause();
+      }
+    },
+    playVideo() {
+      if (this.$refs.player) {
+        this.$refs.player.play();
+      }
     },
     ...mapActions({
       updateVideoStateOnServer: 'videoStateModule/updateVideoStateOnServer',
@@ -149,39 +148,16 @@ export default {
     }),
     ...mapMutations({selectRoomById: 'roomModule/selectById'}),
     updateVideoPlayerSource() {
-      if (!this.player) {
-        this.initVideoPlayer();
+      this.videoId = this.getVideoPath;
+      // this.$refs.player.update(this.getVideoPath);
+
+      if (this.playerState.videoState === VideoState.Playing) {
+        // this.$refs.player.play();
       }
-
-      const currentSource = this.videoOptions.sources[0].src;
-      if (currentSource !== this.getVideoPath) {
-        this.videoOptions.sources[0].src = this.getVideoPath;
-        this.player.src(this.videoOptions.sources[0]);
-        this.player.load();
-
-        if (this.playerState.videoState === VideoState.Playing) {
-          this.player.play();
-        }
-      }
-    },
-    initVideoPlayer() {
-      if (this.player) {
-        return;
-      }
-
-      const self = this;
-
-      this.videoOptions.sources[0].src = this.getVideoPath;
-      this.player = videojs(this.$refs.videoPlayer, this.videoOptions, function onPlayerReady() {
-        this.on('ended', self.onVideoFinished);
-      });
-      console.log("Initialized video player...", this.$refs.videoPlayer);
     },
     onStartVideo() {
       this.updateVideoStateOnServer(VideoState.Playing);
-      if (this.player) {
-        this.player.play();
-      }
+      this.playVideo();
     },
     onResetShow() {
       this.resetRoomShowOnServer();
@@ -200,18 +176,28 @@ export default {
     setInterval(async () => {
       await this.updateFromServer();
     }, import.meta.env.APP_POLL_SERVER_EVERY_MS);
-  },
-  beforeDestroy() {
-    if (this.player) {
-      this.player.dispose()
-    }
   }
-
 }
 </script>
 
 <style>
-/*.vjs-control-bar, .vjs-big-play-button {*/
-/*  z-index: 999;*/
-/*}*/
+iframe {
+  margin: 0px;
+  padding: 0px;
+  border: 0px;
+  border-image-source: initial;
+  border-image-slice: initial;
+  border-image-width: initial;
+  border-image-outset: initial;
+  border-image-repeat: initial;
+  position: fixed;
+  min-width: 0px;
+  max-width: none;
+  min-height: 0px;
+  max-height: none;
+  width: 100%;
+  height: 100%;
+  left: 0px;
+  top: 0px;
+}
 </style>
