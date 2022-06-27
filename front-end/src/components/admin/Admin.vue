@@ -6,9 +6,9 @@
     <hr class="my-5">
 
     <PolisIdsControl></PolisIdsControl>
-    <RoomControl room-id="room_1" title="Room 1" :start-video="startVideo" :reset-video="resetVideo" :next-video="nextVideo" :room-states="roomStates" />
-    <RoomControl room-id="room_2" title="Room 2" :start-video="startVideo" :reset-video="resetVideo" :next-video="nextVideo" :room-states="roomStates" />
-    <RoomControl room-id="room_3" title="Room 3" :start-video="startVideo" :reset-video="resetVideo" :next-video="nextVideo" :room-states="roomStates" />
+    <RoomControl room-id="room_1" title="Room 1" :reset-video="resetVideo" :next-video="nextVideo" :room-states="roomStates" />
+    <RoomControl room-id="room_2" title="Room 2" :reset-video="resetVideo" :next-video="nextVideo" :room-states="roomStates" />
+    <RoomControl room-id="room_3" title="Room 3" :reset-video="resetVideo" :next-video="nextVideo" :room-states="roomStates" />
 
   </div>
 
