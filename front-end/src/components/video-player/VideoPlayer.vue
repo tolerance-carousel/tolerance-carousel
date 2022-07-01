@@ -55,6 +55,11 @@
 
     <div class="text-center text-white w-[100vw] h-[100vh] absolute top-0 left-0 bg-black bg-opacity-60 pt-10"
          v-if="roomId && videoState === VideoState.EnteringInput">
+      <audio controls autoplay class="mx-auto mb-4 h-8 opacity-0 hover:opacity-100 transition-opacity">
+        <source src="/music/deepblue.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+      </audio>
+
       <video-player-countdown :video-starts-at="playerState.startsAt" :room-id="roomId"
                               :is-final-counter="isPlayingFinalVideo()"></video-player-countdown>
     </div>
