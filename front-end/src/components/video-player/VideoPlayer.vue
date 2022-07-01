@@ -10,7 +10,8 @@
     <SharePerspectiveLink :room-id="roomId"/>
     <div class="text-center">
       <button @click="onStartVideo()" class="mt-5 rounded-full bg-slate-600	px-5 py-2 text-white hover:bg-slate-700">
-        Start de show
+        Start the show
+<!--        Start de show-->
       </button>
 
       <br/>

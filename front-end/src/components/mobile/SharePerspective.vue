@@ -11,13 +11,18 @@
   <div class="m-4" v-if="playerState.videoState === VideoState.ThankYou">
     <h1 class="text-2xl font-bold">
       <em>
-        Dank je wel voor het meedoen!
+        Thank you for participating!
+<!--        Dank je wel voor het meedoen!-->
       </em>
     </h1>
     <p class="mt-2">
-      Vragen, gedachten of opmerkingen? Voel je vrij om iemand in je omgeving of een van de facilitators te benaderen.
+      Questions, thoughts or comments? Feel free to reach out to one of the facilitators.
+<!--      Vragen, gedachten of opmerkingen? Voel je vrij om iemand in je omgeving of een van de facilitators te benaderen.-->
     </p>
-    <p class="mt-2">Je kunt nu dit venster sluiten.</p>
+    <p class="mt-2">
+      <!--      Je kunt nu dit venster sluiten.-->
+            You may now close this window.
+    </p>
   </div>
 
   <div v-show="playerState.videoState === VideoState.EnteringInput">

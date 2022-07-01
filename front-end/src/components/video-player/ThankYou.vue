@@ -2,10 +2,11 @@
   <div class="text-center pt-8 bg-[#f4f2f0] text-[#111111] h-screen flex flex-col">
     <div style="flex: 1 1 auto" class="px-4">
       <h1 class="text-4xl font-bold">
-        Dank je wel voor het meedoen!
+        Thank you for participating!
       </h1>
       <p class="mt-4 text-lg">
-        Vragen, gedachten of opmerkingen? Voel je vrij om iemand in je omgeving of een van de facilitators te benaderen.
+        Questions, thoughts or comments? Feel free to reach out to one of the facilitators.
+<!--        Vragen, gedachten of opmerkingen? Voel je vrij om iemand in je omgeving of een van de facilitators te benaderen.-->
       </p>
 
       <div class="">
@@ -31,7 +32,10 @@
         <div class="mt-8 px-8">
           <img src="/stills/condoomverkoopster.jpg" alt="Condoomverkoopster"
                class="max-h-64 inline-block rounded-2xl drop-shadow">
-          <p class="text-lg mt-2">Condoomverkoopster</p>
+          <p class="text-lg mt-2">
+<!--            Condoomverkoopster-->
+            Condom seller
+          </p>
         </div>
 
       </div>
@@ -39,23 +43,53 @@
 
     <footer class="bg-[#d60034] w-screen text-left py-4" style="flex: 0 1 40px;">
       <h1 class="font-bold text-lg mx-8">
-        Met dank aan
+        Special thanks to
       </h1>
 
       <div class="my-4 mx-8 text-lg columns-2">
         <p><strong>Zenzi Alwart</strong> Maria Ruysch</p>
         <p><strong>Noël van Santen</strong> Abraham Aboab</p>
-        <p><strong>Charlotte vd Linden</strong> condoomverkoopster</p>
-        <p><strong>Wouter Eizenga</strong> regisseur</p>
-        <p><strong>Jeanette van Vliet</strong> kledingstyliste</p>
+        <p>
+          <strong>Charlotte vd Linden</strong>
+          condom seller
+<!--          condoomverkoopster-->
+        </p>
+        <p><strong>Wouter Eizenga</strong> director
+<!--          regisseur-->
+        </p>
+        <p><strong>Jeanette van Vliet</strong>
+          wardrobe stylist
+<!--          kledingstyliste-->
+        </p>
         <p><strong>Boris Everts</strong> filmmaker</p>
-        <p><strong>Servaas Everts</strong> locatie scout</p>
+        <p><strong>Servaas Everts</strong>
+          location scout
+<!--          locatie scout-->
+        </p>
         <p><strong>Simon Dirks</strong> IT specialist</p>
-        <p><strong>Tim Overkempe</strong> historisch onderzoek</p>
-        <p><strong>Shahin Nazar</strong> tolerantie onderzoeker</p>
-        <p><strong>Toine Pieters</strong> manusje van alles</p>
-        <p><strong>Gekomen om te blijven</strong> (U900) en <strong>HUA</strong> voor inhoudelijke ondersteuning</p>
-        <p><strong>Provincie Utrecht</strong> voor financiële ondersteuning</p>
+        <p><strong>Tim Overkempe</strong>
+          historical research
+<!--          historisch onderzoek-->
+        </p>
+        <p><strong>Shahin Nazar</strong>
+          tolerance researcher
+<!--          tolerantie onderzoeker-->
+        </p>
+        <p><strong>Toine Pieters</strong>
+          Jack of all trades
+<!--          manusje van alles-->
+        </p>
+        <p><strong>Gekomen om te blijven</strong> (U900)
+          and
+<!--          en-->
+          <strong>HUA</strong>
+          for content-related support
+<!--          voor inhoudelijke ondersteuning-->
+        </p>
+        <p><strong>Provincie Utrecht</strong>
+          for financial support
+<!--          voor financiële ondersteuning-->
+        </p>
 <!--        <p><small><strong>Muziek</strong> van bensound.com</small></p>-->
       </div>
       <!--    <span>-->
