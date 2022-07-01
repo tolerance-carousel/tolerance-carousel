@@ -56,7 +56,7 @@
         <p><strong>Toine Pieters</strong> manusje van alles</p>
         <p><strong>Gekomen om te blijven</strong> (U900) en <strong>HUA</strong> voor inhoudelijke ondersteuning</p>
         <p><strong>Provincie Utrecht</strong> voor financiële ondersteuning</p>
-        <p><small><strong>Muziek</strong> van bensound.com</small></p>
+<!--        <p><small><strong>Muziek</strong> van bensound.com</small></p>-->
       </div>
       <!--    <span>-->
       <!--      <img src="/logos/logo-hua.svg" alt="Logo van Het Utrechts Archief" class="w-8 md:w-24 inline-block mr-8">-->

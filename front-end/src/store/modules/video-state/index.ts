@@ -125,11 +125,11 @@ const videoStateModule = {
         getVideoPath: (state: any) => {
             const currentTheme = state.playerState.currentTheme;
             if(currentTheme === 'religion') {
-                return '346095107';
+                return '725627120';
             } else if(currentTheme === 'migration') {
-                return '73006976';
+                return '725625538';
             } else if (currentTheme === 'sexuality') {
-                return '17101589';
+                return '725989285';
             } else {
                 console.warn("Could not find video for theme:", currentTheme)
                 return null;
