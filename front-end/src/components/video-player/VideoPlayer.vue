@@ -24,7 +24,7 @@
       <SharePerspectiveLink :room-id="roomId" :show-as-video-overlay="true"/>
     </div>
 
-    <div class="h-screen w-screen bg-black">
+    <div class="h-screen w-screen bg-black vimeo-player-container">
       <vimeo-player ref="player" :video-id="videoId" @ready="onVideoReady" :autoplay="true" @ended="onVideoFinished"
                     v-if="videoState === VideoState.Playing"/>
     </div>
@@ -187,7 +187,7 @@ export default {
 </script>
 
 <style>
-iframe {
+.vimeo-player-container iframe {
   margin: 0px;
   padding: 0px;
   border: 0px;
