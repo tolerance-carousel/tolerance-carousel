@@ -1,12 +1,20 @@
 <template>
 <!--  <div class="m-2">Room theme: {{ currentTheme }}</div>-->
   <div class="m-2" v-if="playerState.videoState === VideoState.Welcome">
-    <p class="animate-pulse">Wachten tot de show begint...</p>
-    <p>Een moment geduld alsjeblieft.</p>
+    <p class="animate-pulse">
+      Waiting for the show to start...
+<!--      Wachten tot de show begint...-->
+    </p>
+<!--    <p>-->
+<!--      Een moment geduld alsjeblieft.-->
+<!--    </p>-->
 <!--    Theme: {{ currentTheme }}-->
   </div>
   <div class="m-2" v-if="playerState.videoState === VideoState.Playing">
-    <p>Er wordt nu een video afgespeeld op het scherm.</p>
+    <p>
+      A video is now being played on the screen.
+<!--      Er wordt nu een video afgespeeld op het scherm.-->
+    </p>
   </div>
   <div class="m-4" v-if="playerState.videoState === VideoState.ThankYou">
     <h1 class="text-2xl font-bold">
@@ -102,7 +110,7 @@ export default {
         polisEmbedScript.setAttribute('src', '/embed.js');
         document.head.appendChild(polisEmbedScript);
       }, 1000);
-    }
+    } 
   }
 }
 </script>
