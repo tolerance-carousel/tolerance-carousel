@@ -5,7 +5,7 @@ import morgan from "morgan";
 import cors from "cors";
 import bodyParser from "body-parser";
 
-const TIME_TO_ENTER_INPUT = 60 * 4 * 1000;
+const TIME_TO_ENTER_INPUT = 60 * 5 * 1000;
 
 const states = {
     "room_1": {
