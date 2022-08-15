@@ -6,16 +6,16 @@
     <hr class="my-5">
 
     <PolisIdsControl></PolisIdsControl>
-    <RoomControl room-id="room_1" title="Room 1" :reset-video="resetVideo" :next-video="nextVideo" :room-states="roomStates" />
-    <RoomControl room-id="room_2" title="Room 2" :reset-video="resetVideo" :next-video="nextVideo" :room-states="roomStates" />
-    <RoomControl room-id="room_3" title="Room 3" :reset-video="resetVideo" :next-video="nextVideo" :room-states="roomStates" />
+    <RoomControl room-id="room_1" title="Room 1" :reset-video="resetVideo" :next-video="nextVideo" :room-states="getStates" />
+    <RoomControl room-id="room_2" title="Room 2" :reset-video="resetVideo" :next-video="nextVideo" :room-states="getStates" />
+    <RoomControl room-id="room_3" title="Room 3" :reset-video="resetVideo" :next-video="nextVideo" :room-states="getStates" />
 
   </div>
 
 </template>
 
 <script>
-import {mapActions, mapMutations} from "vuex";
+import {mapActions, mapGetters, mapMutations} from "vuex";
 import {VideoState} from "../../models/video-state";
 import PasswordInput from "./PasswordInput.vue";
 import RoomControl from "./RoomControl.vue";
@@ -26,8 +26,12 @@ export default {
   components: {PolisIdsControl, RoomControl, PasswordInput},
   data() {
     return {
-      roomStates: null,
     }
+  },
+  computed: {
+    ...mapGetters({
+      getStates: 'videoStateModule/getStates'
+    })
   },
   methods: {
     ...mapMutations({
@@ -36,8 +40,8 @@ export default {
     ...mapActions({
       updateVideoStateOnServer: 'videoStateModule/updateVideoStateOnServer',
       resetRoomShowOnServer: 'videoStateModule/resetRoomShowOnServer',
-      getRoomStatesFromServer: 'videoStateModule/getRoomStatesFromServer',
       goToNextVideoOnServer: 'videoStateModule/goToNextVideoOnServer',
+      initializeSocketConnection: 'videoStateModule/initializeSocketConnection'
     }),
     startVideo(roomId) {
       this.selectRoomById(roomId);
@@ -53,14 +57,7 @@ export default {
     },
   },
   mounted() {
-    setInterval(async() => {
-      const roomStates = await this.getRoomStatesFromServer();
-      if(!roomStates) {
-        return;
-      }
-      console.log(roomStates);
-      this.roomStates = roomStates;
-    }, import.meta.env.APP_POLL_SERVER_EVERY_MS)
+    this.initializeSocketConnection();
   }
 }
 </script>

@@ -68,9 +68,6 @@ export default {
   mounted() {
     this.init();
   },
-  activated() {
-    console.log("Activated!");
-  },
   computed: {
     ...mapGetters({
       playerState: "videoStateModule/getState"
@@ -81,18 +78,12 @@ export default {
   },
   methods: {
     ...mapActions({
-      updateFromServer: 'videoStateModule/updateFromServer',
       getPolisIdsFromServer: 'polisModule/getPolisIdsFromServer',
     }),
     ...mapMutations({selectRoomById: 'roomModule/selectById'}),
     async init() {
       const roomId = this.$route.params.roomId;
       this.selectRoomById(roomId);
-
-      // TODO: Wait for response before sending new request.
-      setInterval(async () => {
-        await this.updateFromServer();
-      }, import.meta.env.APP_POLL_SERVER_EVERY_MS);
 
       this.polisIds = await this.getPolisIdsFromServer();
       this.reloadPolis();

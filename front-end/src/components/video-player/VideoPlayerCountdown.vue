@@ -62,7 +62,6 @@ export default {
       const videoStartsInMs = this.videoStartsAt - Date.now();
       if (!this.isMobileCounter && videoStartsInMs <= 0 && this.videoState === VideoState.EnteringInput) {
         this.goToNextVideoOnServer().then((response) => {
-          console.log('Server state:', response);
           this.countingDown = false;
         }).catch(error => {
           console.warn('Could not update video state on server...', error);

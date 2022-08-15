@@ -148,9 +148,9 @@ export default {
     },
     ...mapActions({
       updateVideoStateOnServer: 'videoStateModule/updateVideoStateOnServer',
-      updateFromServer: 'videoStateModule/updateFromServer',
       resetRoomShowOnServer: 'videoStateModule/resetRoomShowOnServer',
       goToNextVideoOnServer: 'videoStateModule/goToNextVideoOnServer',
+      initializeSocketConnection: 'videoStateModule/initializeSocketConnection',
     }),
     ...mapMutations({selectRoomById: 'roomModule/selectById'}),
     updateVideoPlayerSource() {
@@ -177,11 +177,7 @@ export default {
   },
   mounted() {
     this.selectRoomById(this.$route.params.roomId);
-
-    // TODO: Wait for response before sending new request.
-    setInterval(async () => {
-      await this.updateFromServer();
-    }, import.meta.env.APP_POLL_SERVER_EVERY_MS);
+    this.initializeSocketConnection();
   }
 }
 </script>

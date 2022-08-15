@@ -1,6 +1,5 @@
 import {PolisIds} from "../../../models/polis-ids";
 import {ActionContext} from "vuex";
-import {VideoState} from "../../../models/video-state";
 
 const polisModule = {
     namespaced: true,

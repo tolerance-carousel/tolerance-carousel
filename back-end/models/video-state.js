@@ -1,4 +1,4 @@
-class VideoState {
+export class VideoState {
     static Welcome = new VideoState("welcome")
     static PlayingVideo = new VideoState("playingVideo")
     static EnteringInput = new VideoState("enteringInput")
@@ -13,4 +13,3 @@ class VideoState {
     }
 }
 
-module.exports = {VideoState};

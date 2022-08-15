@@ -1,15 +1,11 @@
-const express = require('express');
-const cors = require('cors');
-const bodyParser = require('body-parser');
-const morgan = require('morgan');
-const {VideoState} = require("./models/video-state");
+import {WebSocketServer, WebSocket} from 'ws';
+import {VideoState} from "./models/video-state.js";
+import express from "express";
+import morgan from "morgan";
+import cors from "cors";
+import bodyParser from "body-parser";
 
 const TIME_TO_ENTER_INPUT = 60 * 4 * 1000;
-const app = express();
-
-app.use(morgan('tiny'));
-app.use(cors());
-app.use(bodyParser.json());
 
 const states = {
     "room_1": {
@@ -37,6 +33,7 @@ let polisIds = {
 
 const themeIds = ["religion", "migration", "sexuality"];
 
+
 function isPasswordValid(password) {
     return password === "WeLoveTolerance!";
 }
@@ -45,9 +42,9 @@ function isVideoStateValid(state) {
     return state && VideoState.GetAllNames().includes(state);
 }
 
-function isThemeIdValid(themeId) {
-    return themeId && themeIds.includes(themeId);
-}
+// function isThemeIdValid(themeId) {
+//     return themeId && themeIds.includes(themeId);
+// }
 
 function isRoomIdValid(roomId) {
     return roomId && Object.keys(states).includes(roomId);
@@ -66,10 +63,49 @@ function getNextTheme(currentTheme) {
     return undefined;
 }
 
-app.get('/', (req, res) => {
-    res.json(states);
+const wss = new WebSocketServer({port: 4000});
+wss.on('connection', function connection(ws) {
+    ws.on('message', function message(data) {
+        console.log('Received: %s', data);
+        data = JSON.parse(data);
+        if(data.type === 'update-video-state') {
+            updateVideoState(data.roomId, data.pw, data.state);
+        } else if(data.type === 'reset-video') {
+            resetVideo(data.roomId, data.pw);
+        } else if(data.type === 'next-video') {
+            goToNextVideo(data.roomId, data.pw);
+        } else {
+            console.warn("Unknown request...");
+        }
+    });
+
+    updateSocketClient(ws);
 });
 
+async function updateAllSocketClients() {
+    if(!wss) {
+        console.warn("Could not update socket clients, socket not defined...");
+    }
+
+    console.log("Updating socket clients..."); // , states);
+    wss.clients.forEach((client) => {
+        if (client.readyState === WebSocket.OPEN) {
+            updateSocketClient(client);
+        }
+    });
+}
+
+function updateSocketClient(client) {
+    client.send(JSON.stringify(states));
+}
+
+const app = express();
+
+app.use(morgan('tiny'));
+app.use(cors());
+app.use(bodyParser.json());
+
+// TODO: Handle using websocket as well?
 app.get('/get-polis-ids', (req, res) => {
     res.json(polisIds);
 });
@@ -93,41 +129,21 @@ app.get('/update-polis-ids', (req, res) => {
     res.json(polisIds);
 });
 
-app.get('/get-state', (req, res) => {
-    const roomId = req.query.roomId;
+const updateVideoState = (roomId, pw, state) => {
+    console.log("Updating video state...");
     if (!isRoomIdValid(roomId)) {
-        console.warn("Invalid room ID:", roomId);
-        return res.status(400).send({
-            message: 'Invalid room ID'
-        });
-    }
-    res.json(states[roomId]);
-});
-
-app.get('/get-states', (req, res) => {
-    res.json(states);
-});
-
-app.get('/update-video-state', (req, res) => {
-    const roomId = req.query.roomId;
-    if (!isRoomIdValid(roomId)) {
-        return res.status(400).send({
-            message: 'Invalid room ID'
-        });
+        console.warn('Invalid room ID');
+        return;
     }
 
-    const pw = req.query.pw;
     if (!isPasswordValid(pw)) {
-        return res.status(401).send({
-            message: 'Invalid password'
-        });
+        console.warn('Invalid password');
+        return;
     }
 
-    const state = req.query.state;
     if (!isVideoStateValid(state)) {
-        return res.status(400).send({
-            message: 'Invalid state'
-        });
+        console.warn('Invalid state');
+        return;
     }
 
     states[roomId].videoState = state;
@@ -135,51 +151,44 @@ app.get('/update-video-state', (req, res) => {
     if (state === VideoState.EnteringInput.name) {
         states[roomId].startsAt = Date.now() + TIME_TO_ENTER_INPUT;
 
-        if (states[roomId].currentTheme === "religion") {
-            // Add one minute for the first round
-            states[roomId].startsAt += 60 * 1000;
-        }
+        // if (states[roomId].currentTheme === "religion") {
+        //     // Add one minute for the first round
+        //     states[roomId].startsAt += 60 * 1000;
+        // }
     } else {
         states[roomId].startsAt = -1;
     }
 
-    res.json(states);
-});
+    void updateAllSocketClients();
+}
 
-app.get('/reset-video', (req, res) => {
-    const roomId = req.query.roomId;
+const resetVideo = (roomId, pw) => {
     if (!isRoomIdValid(roomId)) {
-        return res.status(400).send({
-            message: 'Invalid room ID'
-        });
+        console.warn('Invalid room ID')
+        return;
     }
 
-    const pw = req.query.pw;
     if (!isPasswordValid(pw)) {
-        return res.status(401).send({
-            message: 'Invalid password'
-        });
+        console.warn('Invalid password')
+        return;
     }
 
     states[roomId].videoState = VideoState.Welcome.name;
     states[roomId].currentTheme = themeIds[0];
     states[roomId].startsAt = -1;
-    res.json(states);
-});
 
-app.get('/next-video', (req, res) => {
-    const roomId = req.query.roomId;
+    void updateAllSocketClients();
+}
+
+const goToNextVideo = (roomId, pw) => {
     if (!isRoomIdValid(roomId)) {
-        return res.status(400).send({
-            message: 'Invalid room ID'
-        });
+        console.warn('Invalid room ID')
+        return;
     }
 
-    const pw = req.query.pw;
     if (!isPasswordValid(pw)) {
-        return res.status(401).send({
-            message: 'Invalid password'
-        });
+        console.warn('Invalid password');
+        return;
     }
 
     const hasNextTheme = getNextTheme(states[roomId].currentTheme);
@@ -191,10 +200,10 @@ app.get('/next-video', (req, res) => {
         states[roomId].videoState = VideoState.ThankYou.name;
     }
 
-    res.json(states);
-});
+    void updateAllSocketClients();
+};
 
-const port = process.env.PORT || 4000;
+const port = process.env.PORT || 4001;
 app.listen(port, () => {
     console.log(`listening on ${port}`);
 });

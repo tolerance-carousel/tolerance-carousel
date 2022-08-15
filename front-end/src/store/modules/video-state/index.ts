@@ -1,73 +1,131 @@
-import {VideoPlayerState, VideoState} from '../../../models/video-state';
+import {VideoPlayerState, VideoPlayerStates, VideoState} from '../../../models/video-state';
 import {ActionContext} from 'vuex';
 
+// TODO: Make state typed
 const videoStateModule = {
     namespaced: true,
     state() {
         return {
+            playerStates: null,
             playerState: {
                 currentTheme: "religion",
                 videoState: VideoState.Welcome,
                 startsAt: -1
-            }
+            },
+            socket: WebSocket
         };
     },
     mutations: {
-        updateLocally(state: any, newState: VideoPlayerState) {
-            console.log("Updating local state...", newState);
-            if (JSON.stringify(state.playerState) == JSON.stringify(newState)) {
+        setPlayerStates(state: any, newPlayerStates: VideoPlayerStates) {
+            console.log("Updating player states...", state.playerStates, '->', newPlayerStates);
+            if (JSON.stringify(state.playerStates) == JSON.stringify(newPlayerStates)) {
                 return;
             }
 
-            state.playerState = newState;
-            console.log('Updated video player state locally...', state.playerState, '->', newState);
+            state.playerStates = newPlayerStates;
+            console.log('Updated player states successfully!');
+        },
+        setPlayerState(state: any, newPlayerState: VideoPlayerState) {
+            console.log("Updating player state...", state.playerState, '->', newPlayerState);
+            if (JSON.stringify(state.playerState) == JSON.stringify(newPlayerState)) {
+                return;
+            }
+
+            state.playerState = newPlayerState;
+            console.log('Updated player state locally');
+        },
+        setSocket(state: any, socket: WebSocket) {
+            state.socket = socket;
         },
     },
     actions: {
+        initializeSocketConnection: async (context: ActionContext<any, any>) => {
+            console.log("Initializing websocket connection...");
+            const socket: WebSocket = new WebSocket(`${import.meta.env.APP_WEBSOCKET_URL}`);
+            context.commit('setSocket', socket);
+
+            socket.onopen = (_) => {
+                console.log("Websocket connection established");
+            };
+
+            socket.onmessage = function (event) {
+                console.log(`Data received from server: ${event.data}`);
+                let states: VideoPlayerStates | null = null;
+                try {
+                    states = JSON.parse(event.data);
+                    // console.log("Server states:", states);
+                } catch (e) {
+                    console.error(e);
+                    return;
+                }
+
+                if (states) {
+                    context.commit('setPlayerStates', states);
+
+                    const roomId: string = context.rootGetters['roomModule/getId'];
+                    if (!roomId) {
+                        console.warn('Could not retrieve room ID... Did not update player state.');
+                        return;
+                    }
+                    context.commit('setPlayerState', states[roomId]);
+                }
+            };
+
+            socket.onclose = (event) => {
+                if (event.wasClean) {
+                    console.log(`Websocket connection closed cleanly, code=${event.code} reason=${event.reason}`);
+                } else {
+                    console.warn(`Websocket connection died`);
+                }
+
+                context.dispatch("initializeSocketConnection");
+            };
+
+            socket.onerror = (error: any) => {
+                console.error(error.message)
+            };
+        },
         updateVideoStateLocally: (context: ActionContext<any, any>, videoState: VideoState) => {
             console.log("Updating local video player state...", videoState);
             const playerState: VideoPlayerState = context.state.playerState;
             playerState.videoState = videoState;
-            context.commit('updateLocally', playerState);
+            context.commit('setPlayerState', playerState);
         },
         updateVideoStateOnServer: async (context: ActionContext<any, any>, newState: VideoState) => {
             console.log("Updating video state on server...", newState);
 
             const roomId: string = context.rootGetters['roomModule/getId'];
             if (!roomId) {
-                console.log('Did not update server state for room', roomId);
+                console.warn('Did not update server state for room', roomId);
                 return;
             }
 
+
             const password: string = context.rootGetters['passwordModule/getPassword'];
-            await context.dispatch('sendHttpRequest', {
-                url: `${import.meta.env.APP_SERVER_URL}/update-video-state?roomId=${roomId}&state=${newState}&pw=${password}`,
-                responseType: 'json'
-            }, {root: true}).then(response => {
-                console.log('Server state:', response);
-            }).catch(error => {
-                console.warn('Could not update video state on server...', error);
-                context.dispatch('updateVideoStateLocally', VideoState.ServerError);
-            });
+
+            const socket = context.getters['getSocket'];
+            socket.send(JSON.stringify({
+                type: 'update-video-state',
+                roomId: roomId,
+                state: newState,
+                pw: password
+            }));
         },
         resetRoomShowOnServer: async (context: ActionContext<any, any>) => {
             console.log("Resetting room on server...");
             const roomId: string = context.rootGetters['roomModule/getId'];
             if (!roomId) {
-                console.log('Did not reset show for room', roomId);
+                console.warn('Did not reset show for room', roomId);
                 return;
             }
 
             const password: string = context.rootGetters['passwordModule/getPassword'];
-            await context.dispatch('sendHttpRequest', {
-                url: `${import.meta.env.APP_SERVER_URL}/reset-video?roomId=${roomId}&pw=${password}`,
-                responseType: 'json'
-            }, {root: true}).then(response => {
-                console.log('Server state:', response);
-            }).catch(error => {
-                console.warn('Could not reset room show on server...', error);
-                context.dispatch('updateVideoStateLocally', VideoState.ServerError);
-            });
+            const socket = context.getters['getSocket'];
+            socket.send(JSON.stringify({
+                type: 'reset-video',
+                roomId: roomId,
+                pw: password
+            }));
         },
         goToNextVideoOnServer: async (context: ActionContext<any, any>) => {
             console.log("Go to next video on server...");
@@ -82,51 +140,30 @@ const videoStateModule = {
             if(!password || password === "" ){
                 return Promise.reject('No password entered');
             }
-            return context.dispatch('sendHttpRequest', {
-                url: `${import.meta.env.APP_SERVER_URL}/next-video?roomId=${roomId}&pw=${password}`,
-                responseType: 'json',
-                alertForIncorrectPassword: false
-            }, {root: true});
+
+            const socket = context.getters['getSocket'];
+            socket.send(JSON.stringify({
+                type: 'next-video',
+                roomId: roomId,
+                pw: password
+            }));
         },
-        updateFromServer: async (context: ActionContext<any, any>) => {
-            console.log("Retrieving video state from server...", import.meta.env);
-            const roomId: string = context.rootGetters['roomModule/getId'];
-            if (!roomId) {
-                return;
-            }
-            await context.dispatch('sendHttpRequest', {
-                url: `${import.meta.env.APP_SERVER_URL}/get-state?roomId=${roomId}`,
-                responseType: 'json'
-            }, {root: true}).then(playerState => {
-                if (!playerState) {
-                    context.dispatch('updateVideoStateLocally', VideoState.ServerError);
-                } else {
-                    context.commit('updateLocally', playerState);
-                }
-            }).catch(error => {
-                console.warn('Could not retrieve state from server...', error);
-                context.dispatch('updateVideoStateLocally', VideoState.ServerError);
-            });
-        },
-        getRoomStatesFromServer: async (context: ActionContext<any, any>) => {
-            console.log("Retrieving room states from server...", import.meta.env);
-            return await context.dispatch('sendHttpRequest', {
-                url: `${import.meta.env.APP_SERVER_URL}/get-states`,
-                responseType: 'json'
-            }, {root: true}).catch(error => {
-                console.warn('Could not retrieve states from server...', error);
-            });
-        }
     },
     getters: {
         getState: (state: any) => {
             return state.playerState;
         },
-        getVideoPath: (state: any) => {
+        getSocket: (state: any) => {
+            return state.socket;
+        },
+        getStates: (state: any) => {
+            return state.playerStates;
+        },
+        getVideoPath: (state: any): string | null => {
             const currentTheme = state.playerState.currentTheme;
-            if(currentTheme === 'religion') {
+            if (currentTheme === 'religion') {
                 return '725627120';
-            } else if(currentTheme === 'migration') {
+            } else if (currentTheme === 'migration') {
                 return '725625538';
             } else if (currentTheme === 'sexuality') {
                 return '725989285';
