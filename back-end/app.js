@@ -129,6 +129,11 @@ app.get('/update-polis-ids', (req, res) => {
     res.json(polisIds);
 });
 
+const port = process.env.PORT || 4001;
+app.listen(port, () => {
+    console.log(`listening on ${port}`);
+});
+
 const updateVideoState = (roomId, pw, state) => {
     console.log("Updating video state...");
     if (!isRoomIdValid(roomId)) {
@@ -202,8 +207,3 @@ const goToNextVideo = (roomId, pw) => {
 
     void updateAllSocketClients();
 };
-
-const port = process.env.PORT || 4001;
-app.listen(port, () => {
-    console.log(`listening on ${port}`);
-});
