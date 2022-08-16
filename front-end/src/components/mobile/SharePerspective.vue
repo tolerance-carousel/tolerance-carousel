@@ -1,45 +1,48 @@
 <template>
-<!--  <div class="m-2">Room theme: {{ currentTheme }}</div>-->
+  <!--  <div class="m-2">Room theme: {{ currentTheme }}</div>-->
   <div class="m-2" v-if="playerState.videoState === VideoState.Welcome">
     <p class="animate-pulse">
       Waiting for the show to start...
-<!--      Wachten tot de show begint...-->
+      <!--      Wachten tot de show begint...-->
     </p>
-<!--    <p>-->
-<!--      Een moment geduld alsjeblieft.-->
-<!--    </p>-->
-<!--    Theme: {{ currentTheme }}-->
+    <!--    <p>-->
+    <!--      Een moment geduld alsjeblieft.-->
+    <!--    </p>-->
+    <!--    Theme: {{ currentTheme }}-->
   </div>
   <div class="m-2" v-if="playerState.videoState === VideoState.Playing">
     <p>
       A video is now being played on the screen.
-<!--      Er wordt nu een video afgespeeld op het scherm.-->
+      <!--      Er wordt nu een video afgespeeld op het scherm.-->
     </p>
   </div>
   <div class="m-4" v-if="playerState.videoState === VideoState.ThankYou">
     <h1 class="text-2xl font-bold">
       <em>
         Thank you for participating!
-<!--        Dank je wel voor het meedoen!-->
+        <!--        Dank je wel voor het meedoen!-->
       </em>
     </h1>
     <p class="mt-2">
       Questions, thoughts or comments? Feel free to reach out to one of the facilitators.
-<!--      Vragen, gedachten of opmerkingen? Voel je vrij om iemand in je omgeving of een van de facilitators te benaderen.-->
+      <!--      Vragen, gedachten of opmerkingen? Voel je vrij om iemand in je omgeving of een van de facilitators te benaderen.-->
     </p>
     <p class="mt-2">
       <!--      Je kunt nu dit venster sluiten.-->
-            You may now close this window.
+      You may now close this window.
     </p>
   </div>
 
   <div v-show="playerState.videoState === VideoState.EnteringInput">
     <div class="py-1 px-2">
-      <video-player-countdown :video-starts-at="playerState.startsAt" :is-mobile-counter="true"></video-player-countdown>
+      <video-player-countdown :video-starts-at="playerState.startsAt"
+                              :is-mobile-counter="true"></video-player-countdown>
     </div>
 
-    <div class="polis" v-for="(polisId, themeId) in polisIds" :data-conversation_id="polisId"
-         v-show="currentTheme === themeId"></div>
+    <template v-for="(polisId, themeId) in polisIds">
+      <div class="polis" :data-conversation_id="polisId"
+           v-if="currentTheme === themeId"></div>
+    </template>
   </div>
 
 </template>
@@ -62,7 +65,7 @@ export default {
     currentTheme(newThemeId, prevThemeId) {
       console.log("NEW THEME", prevThemeId, "->", newThemeId);
 
-      this.reloadPolis();
+      this.reloadPolis(0);
     }
   },
   mounted() {
@@ -91,7 +94,7 @@ export default {
 
       void this.initializeSocketConnection();
     },
-    reloadPolis() {
+    reloadPolis(waitForInitialization = 1000) {
       const prevEmbedScripts = document.querySelectorAll('script[src="/embed.js"]');
       prevEmbedScripts.forEach(prevEmbedScript => {
         console.log("Removing prev embed script:", prevEmbedScript);
@@ -103,8 +106,8 @@ export default {
         const polisEmbedScript = document.createElement('script');
         polisEmbedScript.setAttribute('src', '/embed.js');
         document.head.appendChild(polisEmbedScript);
-      }, 1000);
-    } 
+      }, waitForInitialization);
+    }
   }
 }
 </script>
