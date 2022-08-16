@@ -107,12 +107,14 @@ app.use(bodyParser.json());
 
 // TODO: Handle using websocket as well?
 app.get('/get-polis-ids', (req, res) => {
+    console.log("Retrieving Polis IDs...");
     res.json(polisIds);
 });
 
 app.get('/update-polis-ids', (req, res) => {
     const pw = req.query.pw;
     if (!isPasswordValid(pw)) {
+        console.warn("Invalid password when updating Polis IDs");
         return res.status(401).send({
             message: 'Invalid password'
         });
@@ -121,11 +123,13 @@ app.get('/update-polis-ids', (req, res) => {
         const updatedIds = JSON.parse(req.query.updatedIds);
         polisIds = updatedIds;
     } catch (e) {
+        console.error("Could not parse Polis IDs...");
         return res.status(500).send({
             message: 'Could not parse passed IDs'
         });
     }
 
+    console.log("Updating Polis IDs...");
     res.json(polisIds);
 });
 
