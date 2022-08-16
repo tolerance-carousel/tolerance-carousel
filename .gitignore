@@ -22,6 +22,5 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-front-end/.env.production
 *.m4v
 *.mp4
