@@ -1,5 +1,6 @@
 import {VideoPlayerState, VideoPlayerStates, VideoState} from '../../../models/video-state';
 import {ActionContext} from 'vuex';
+// import {WebSocket} from "vite/types/ws";
 
 // TODO: Make state typed
 const videoStateModule = {
@@ -12,7 +13,8 @@ const videoStateModule = {
                 videoState: VideoState.Welcome,
                 startsAt: -1
             },
-            socket: WebSocket
+            socket: WebSocket, // TODO: Use correct type
+            socketState: null
         };
     },
     mutations: {
@@ -37,15 +39,20 @@ const videoStateModule = {
         setSocket(state: any, socket: WebSocket) {
             state.socket = socket;
         },
+        setSocketState(state: any, socketState: number) {
+            state.socketState = socketState;
+        },
     },
     actions: {
         initializeSocketConnection: async (context: ActionContext<any, any>) => {
             console.log("Initializing websocket connection...");
             const socket: WebSocket = new WebSocket(`${import.meta.env.APP_WEBSOCKET_URL}`);
             context.commit('setSocket', socket);
+            context.commit('setSocketState', socket.readyState);
 
             socket.onopen = (_) => {
                 console.log("Websocket connection established");
+                context.commit('setSocketState', socket.readyState);
             };
 
             socket.onmessage = function (event) {
@@ -78,11 +85,13 @@ const videoStateModule = {
                     console.warn(`Websocket connection died`);
                 }
 
+                context.commit('setSocketState', socket.readyState);
                 context.dispatch("initializeSocketConnection");
             };
 
             socket.onerror = (error: any) => {
-                console.error(error.message)
+                console.error(error.message);
+                context.commit('setSocketState', socket.readyState);
             };
         },
         updateVideoStateLocally: (context: ActionContext<any, any>, videoState: VideoState) => {
@@ -137,7 +146,7 @@ const videoStateModule = {
             }
 
             const password: string = context.rootGetters['passwordModule/getPassword'];
-            if(!password || password === "" ){
+            if (!password || password === "") {
                 return Promise.reject('No password entered');
             }
 
@@ -155,6 +164,9 @@ const videoStateModule = {
         },
         getSocket: (state: any) => {
             return state.socket;
+        },
+        getSocketState: (state: any) => {
+            return state.socketState;
         },
         getStates: (state: any) => {
             return state.playerStates;

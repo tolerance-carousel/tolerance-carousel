@@ -79,6 +79,7 @@ export default {
   methods: {
     ...mapActions({
       getPolisIdsFromServer: 'polisModule/getPolisIdsFromServer',
+      initializeSocketConnection: 'videoStateModule/initializeSocketConnection'
     }),
     ...mapMutations({selectRoomById: 'roomModule/selectById'}),
     async init() {
@@ -87,6 +88,8 @@ export default {
 
       this.polisIds = await this.getPolisIdsFromServer();
       this.reloadPolis();
+
+      void this.initializeSocketConnection();
     },
     reloadPolis() {
       const prevEmbedScripts = document.querySelectorAll('script[src="/embed.js"]');
