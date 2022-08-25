@@ -82,7 +82,8 @@ export default {
   methods: {
     ...mapActions({
       getPolisIdsFromServer: 'polisModule/getPolisIdsFromServer',
-      initializeSocketConnection: 'videoStateModule/initializeSocketConnection'
+      initializeSocketConnection: 'videoStateModule/initializeSocketConnection',
+      getServerLocationFromServer: 'polisModule/getServerLocationFromServer',
     }),
     ...mapMutations({selectRoomById: 'roomModule/selectById'}),
     async init() {
@@ -90,21 +91,27 @@ export default {
       this.selectRoomById(roomId);
 
       this.polisIds = await this.getPolisIdsFromServer();
-      this.reloadPolis();
+      await this.reloadPolis();
 
-      void this.initializeSocketConnection();
+      await this.initializeSocketConnection();
     },
-    reloadPolis(waitForInitialization = 1000) {
-      const prevEmbedScripts = document.querySelectorAll('script[src="/embed.js"]');
+    async reloadPolis(waitForInitialization = 1000) {
+      const serverLocation = await this.getServerLocationFromServer();
+      let embedFile = '/embed.js';
+      if(serverLocation && serverLocation === 'us'){
+        embedFile = '/embed_us-servers.js';
+      }
+
+      const prevEmbedScripts = document.querySelectorAll(`script[src^="/embed"]`);
       prevEmbedScripts.forEach(prevEmbedScript => {
         console.log("Removing prev embed script:", prevEmbedScript);
         prevEmbedScript.remove();
       });
 
       setTimeout(() => {
-        console.log("Loading new embed script...");
+        console.log("Loading new embed script...", embedFile);
         const polisEmbedScript = document.createElement('script');
-        polisEmbedScript.setAttribute('src', '/embed.js');
+        polisEmbedScript.setAttribute('src', embedFile);
         document.head.appendChild(polisEmbedScript);
       }, waitForInitialization);
     }
