@@ -14,6 +14,12 @@
     <button class="bg-slate-600 hover:bg-slate-700 rounded-full text-white px-3 mt-1" @click="onUpdatePolisIdsOnServer()" v-if="serverPolisIds">
       Polis IDs opslaan
     </button>
+
+    <div class="mt-4">
+      <input type="checkbox" id="server-location-checkbox" name="server-location-checkbox" v-model="useUSServers" @change="onUpdateServerLocationOnServer($event)">
+      <label for="server-location-checkbox" class="ml-2">Use US servers</label>
+    </div>
+
   </div>
 </template>
 
@@ -26,7 +32,8 @@ export default {
   data() {
     return {
       polisIds: null,
-      serverPolisIds: null
+      serverPolisIds: null,
+      useUSServers: false
     }
   },
   props: [],
@@ -34,7 +41,9 @@ export default {
     ...mapMutations({}),
     ...mapActions({
       getPolisIdsFromServer: 'polisModule/getPolisIdsFromServer',
-      updatePolisIdsOnServer: 'polisModule/updatePolisIdsOnServer'
+      updatePolisIdsOnServer: 'polisModule/updatePolisIdsOnServer',
+      getServerLocationFromServer: 'polisModule/getServerLocationFromServer',
+      updateServerLocationOnServer: 'polisModule/updateServerLocationOnServer'
     }),
     async initPolisIds() {
       this.serverPolisIds = await this.getPolisIdsFromServer();
@@ -43,10 +52,20 @@ export default {
     async onUpdatePolisIdsOnServer() {
       this.serverPolisIds = await this.updatePolisIdsOnServer(this.polisIds);
       this.polisIds = {...this.serverPolisIds};
+    },
+    async onUpdateServerLocationOnServer(event) {
+      const shouldUseUSServers = event.target.checked;
+      await this.updateServerLocationOnServer(shouldUseUSServers ? 'us' : 'nl');
+      await this.checkServerLocationOnServer();
+    },
+    async checkServerLocationOnServer() {
+      const serverLocation = await this.getServerLocationFromServer();
+      this.useUSServers = serverLocation === 'us';
     }
   },
   mounted() {
     this.initPolisIds();
+    void this.checkServerLocationOnServer();
   }
 }
 </script>

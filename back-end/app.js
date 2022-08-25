@@ -30,6 +30,7 @@ let polisIds = {
     "migration": "49v4meperm",
     "sexuality": "2jic4d2hbr"
 }
+let serverLocation = "nl";
 
 const themeIds = ["religion", "migration", "sexuality"];
 
@@ -131,6 +132,24 @@ app.get('/update-polis-ids', (req, res) => {
 
     console.log("Updating Polis IDs...");
     res.json(polisIds);
+});
+
+app.get('/get-server-location', (req, res) => {
+    res.json(serverLocation);
+});
+
+app.get('/update-server-location', (req, res) => {
+    const pw = req.query.pw;
+    if (!isPasswordValid(pw)) {
+        console.warn("Invalid password when updating server location");
+        return res.status(401).send({
+            message: 'Invalid password'
+        });
+    }
+
+    console.log("Updating server location...");
+    serverLocation = req.query.updatedServerLocation;
+    res.json(serverLocation);
 });
 
 const port = process.env.PORT || 4001;
