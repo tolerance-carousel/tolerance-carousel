@@ -38,6 +38,10 @@ let serverLocation = "nl";
 const themeIds = ["religion", "migration", "sexuality"];
 
 function isPasswordValid(password) {
+    const passwordIsValid = password === process.env.PASSWORD;
+    if(!passwordIsValid) {
+        console.warn("Password is invalid:", password);
+    }
     return password === process.env.PASSWORD;
 }
 
