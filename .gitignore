@@ -24,3 +24,5 @@ dist-ssr
 *.sw?
 *.m4v
 *.mp4
+
+back-end/.env
