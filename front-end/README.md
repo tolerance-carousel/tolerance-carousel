@@ -11,3 +11,5 @@ On the big screen, videos will be played at `https://[YOUR_DOMAIN_NAME]/video/ro
 On participant smartphones, the (embedded) Polis interface can be accessed at `https://[YOUR_DOMAIN_NAME]/share-perspective/room_XXX`.
 
 Polis IDs and room states can be managed from `https://[YOUR_DOMAIN_NAME]/admin`.
+
+We use Caddy to serve the front-end, back-end and Polis from separate subdomains.
