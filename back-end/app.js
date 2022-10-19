@@ -1,9 +1,12 @@
-import {WebSocketServer, WebSocket} from 'ws';
+import {WebSocket, WebSocketServer} from 'ws';
 import {VideoState} from "./models/video-state.js";
 import express from "express";
 import morgan from "morgan";
 import cors from "cors";
 import bodyParser from "body-parser";
+import dotenv from 'dotenv'
+
+dotenv.config();
 
 const TIME_TO_ENTER_INPUT = 60 * 5 * 1000;
 
@@ -34,9 +37,8 @@ let serverLocation = "nl";
 
 const themeIds = ["religion", "migration", "sexuality"];
 
-
 function isPasswordValid(password) {
-    return password === "WeLoveTolerance!";
+    return password === process.env.PASSWORD;
 }
 
 function isVideoStateValid(state) {
@@ -69,11 +71,11 @@ wss.on('connection', function connection(ws) {
     ws.on('message', function message(data) {
         console.log('Received: %s', data);
         data = JSON.parse(data);
-        if(data.type === 'update-video-state') {
+        if (data.type === 'update-video-state') {
             updateVideoState(data.roomId, data.pw, data.state);
-        } else if(data.type === 'reset-video') {
+        } else if (data.type === 'reset-video') {
             resetVideo(data.roomId, data.pw);
-        } else if(data.type === 'next-video') {
+        } else if (data.type === 'next-video') {
             goToNextVideo(data.roomId, data.pw);
         } else {
             console.warn("Unknown request...");
@@ -84,7 +86,7 @@ wss.on('connection', function connection(ws) {
 });
 
 async function updateAllSocketClients() {
-    if(!wss) {
+    if (!wss) {
         console.warn("Could not update socket clients, socket not defined...");
     }
 
