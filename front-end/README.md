@@ -1,11 +1,13 @@
-# Vue 3 + Typescript + Vite
+# The Tolerance Carousel
 
-This template should help get you started developing with Vue 3 and Typescript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+The tolerance carousel was developed to work with Polis. In our case, we self-hosted a [fork](https://github.com/Simon-Dirks/polis) of Polis on a VPS.
 
-## Recommended IDE Setup
+The back-end manages the states of the tolerance carousel rooms. Clients connect to the back-end using a WebSocket.
 
-- [VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=johnsoncodehk.volar)
+A password for the back-end can be set using a `.env` file.
 
-## Type Support For `.vue` Imports in TS
+On the big screen, videos will be played at `https://[YOUR_DOMAIN_NAME]/video/room_XXX`, with XXX being your room number (e.g., 1).
 
-Since TypeScript cannot handle type information for `.vue` imports, they are shimmed to be a generic Vue component type by default. In most cases this is fine if you don't really care about component prop types outside of templates. However, if you wish to get actual prop types in `.vue` imports (for example to get props validation when using manual `h(...)` calls), you can enable Volar's `.vue` type support plugin by running `Volar: Switch TS Plugin on/off` from VSCode command palette.
+On participant smartphones, the (embedded) Polis interface can be accessed at `https://[YOUR_DOMAIN_NAME]/share-perspective/room_XXX`.
+
+Polis IDs and room states can be managed from `https://[YOUR_DOMAIN_NAME]/admin`.
