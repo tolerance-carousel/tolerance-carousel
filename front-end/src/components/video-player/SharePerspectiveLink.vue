@@ -7,13 +7,13 @@
     <a :href="`/share-perspective/${roomId}`"
        :class="[showAsVideoOverlay ? 'text-lg rounded-sm px-2 py-[0.1rem] bg-[rgba(255,255,255,0.75)]' : 'text-2xl']">
         <span v-if="roomId==='room_1'">
-          https://edu.nl/xuu33
+          https://edu.nl/rth68
         </span>
       <span v-if="roomId==='room_2'">
-          https://edu.nl/tt3vt
+          https://edu.nl/yumxc
         </span>
       <span v-if="roomId==='room_3'">
-          https://edu.nl/acttf
+          https://edu.nl/vrg77
         </span>
     </a>
     <!--      <p>-->
