@@ -3,7 +3,7 @@
     var firstRun = !window.polis._hasRun;
     polis._hasRun = 1;
     var iframes = [];
-    var polisUrl = "https://polis.boasmedia.nl";
+    var polisUrl = "https://polis.utrechttimemachine.nl";
     var maxHeightsSeen = {};
 
     polis.on = polis.on || {};

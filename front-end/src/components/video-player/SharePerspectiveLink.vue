@@ -17,7 +17,7 @@
         </span>
     </a>
     <!--      <p>-->
-    <!--        https://experience.boasmedia.nl/share-perspective/{{ roomId }}-->
+    <!--        https://experience.utrechttimemachine.nl/share-perspective/{{ roomId }}-->
     <!--      </p>-->
   </div>
 </template>
