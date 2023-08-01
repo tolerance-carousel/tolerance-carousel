@@ -1,6 +1,6 @@
 # The Tolerance Carousel
 
-The tolerance carousel was developed to work with Polis. In our case, we self-hosted a [fork](https://github.com/Simon-Dirks/polis) of Polis on a VPS.
+The tolerance carousel was developed to work with Polis. In our case, we self-hosted a fork of Polis on a VPS.
 
 The back-end manages the states of the tolerance carousel rooms. Clients connect to the back-end using a WebSocket.
 
