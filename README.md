@@ -13,3 +13,5 @@ On participant smartphones, the (embedded) Polis interface can be accessed at `h
 Polis IDs and room states can be managed from `https://[YOUR_DOMAIN_NAME]/admin`.
 
 We use Caddy to serve the front-end, back-end and Polis from separate subdomains.
+
+![participant-flow](https://github.com/tolerance-carousel/tolerance-carousel/assets/2639851/4590dc06-d5a4-41d6-ba9f-d651d3957e34)
